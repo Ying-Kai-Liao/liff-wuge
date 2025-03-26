@@ -4,7 +4,6 @@ import "./globals.css";
 import LiffProvider from "./components/LiffProvider";
 import Navigation from "./components/Navigation";
 import { InquiryProvider } from "./hooks/useInquiry";
-import { AuthProvider } from "./contexts/AuthContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,16 +30,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider>
-          <LiffProvider>
-            <InquiryProvider>
-              <Navigation />
-              <main className="min-h-screen bg-gray-50 dark:bg-gray-950">
-                {children}
-              </main>
+        <LiffProvider>
+          <InquiryProvider>
+            <Navigation />
+            <main className="min-h-screen bg-gray-50 dark:bg-gray-950">
+              {children}
+            </main>
             </InquiryProvider>
           </LiffProvider>
-        </AuthProvider>
       </body>
     </html>
   );
