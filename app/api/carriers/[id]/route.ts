@@ -3,10 +3,10 @@ import { getCarrierById } from '../../../lib/services/carrierService';
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
-    const carrier = await getCarrierById(params.id);
+    const carrier = await getCarrierById(context.params.id);
     
     if (!carrier) {
       return NextResponse.json(
