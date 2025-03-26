@@ -4,18 +4,17 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ProtectedRoute from '../components/ProtectedRoute';
-import { signOut } from '../lib/services/authService';
-import { useAuth } from '../contexts/AuthContext';
+import { useLiff } from '../components/LiffProvider';
 
 export default function AdminPage() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { liff } = useLiff();
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteResult, setDeleteResult] = useState<{ success: boolean; message: string } | null>(null);
 
   const handleSignOut = async () => {
-    const { success } = await signOut();
-    if (success) {
+    if (liff && liff.isLoggedIn()) {
+      liff.logout();
       router.push('/admin/login');
     }
   };
@@ -60,9 +59,8 @@ export default function AdminPage() {
                 </div>
               </div>
               <div className="flex items-center">
-                {user && (
+                {liff && liff.isLoggedIn() && (
                   <div className="ml-3 relative flex items-center space-x-4">
-                    <span className="text-sm font-medium text-gray-700">{user.email}</span>
                     <button
                       onClick={handleSignOut}
                       className="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
