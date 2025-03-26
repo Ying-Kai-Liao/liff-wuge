@@ -1,0 +1,94 @@
+[
+  {
+    "carrier": "NTT Docomo",
+    "duration_days": 5,
+    "total_data": "3GB",
+    "price": 1500,
+    "speed_policy": "用完後降速",
+    "notes": ["適合短期旅行", "覆蓋全日本主要城市及旅遊景點"]
+  },
+  {
+    "carrier": "NTT Docomo",
+    "duration_days": 8,
+    "total_data": "5GB",
+    "price": 2000,
+    "speed_policy": "用完後降速",
+    "notes": ["支援熱點分享", "適合一週旅行"]
+  },
+  {
+    "carrier": "NTT Docomo",
+    "duration_days": 15,
+    "total_data": "10GB",
+    "price": 3000,
+    "notes": ["適合長期旅行", "不限速", "可分享給多台裝置"]
+  },
+  {
+    "carrier": "NTT Docomo",
+    "duration_days": 30,
+    "data_per_day": "2GB",
+    "price": 5000,
+    "speed_policy": "每日2GB高速流量，超過後降速至128kbps",
+    "notes": ["適合長期停留", "支援熱點分享"]
+  },
+  {
+    "carrier": "SoftBank",
+    "duration_days": 3,
+    "total_data": "1GB",
+    "price": 1000,
+    "notes": ["適合短期週末旅行", "覆蓋東京及大阪"]
+  },
+  {
+    "carrier": "SoftBank",
+    "duration_days": 5,
+    "total_data": "3GB",
+    "price": 1800,
+    "notes": ["適合短期旅行", "支援熱點分享"]
+  },
+  {
+    "carrier": "SoftBank",
+    "duration_days": 10,
+    "total_data": "7GB",
+    "price": 2800,
+    "speed_policy": "用完後降速至256kbps",
+    "notes": ["適合中期旅行", "支援熱點分享"]
+  },
+  {
+    "carrier": "SoftBank",
+    "duration_days": 30,
+    "data_per_day": "1.5GB",
+    "price": 4800,
+    "speed_policy": "每日1.5GB高速流量，超過後降速",
+    "notes": ["適合長期旅行", "支援熱點分享"]
+  },
+  {
+    "carrier": "KDDI (au)",
+    "duration_days": 7,
+    "total_data": "5GB",
+    "price": 2200,
+    "notes": ["覆蓋全日本", "支援5G網路（視地區而定）"]
+  },
+  {
+    "carrier": "KDDI (au)",
+    "duration_days": 15,
+    "total_data": "10GB",
+    "price": 3500,
+    "speed_policy": "用完後降速至3G速度",
+    "notes": ["用完後降速至3G速度，仍可正常使用基本功能"]
+  },
+  {
+    "carrier": "KDDI (au)",
+    "duration_days": 30,
+    "total_data": "20GB",
+    "price": 5500,
+    "speed_policy": "用完後降速但不斷線",
+    "notes": ["適合長期旅行", "用完後降速但不斷線"]
+  },
+  {
+    "carrier": "KDDI (au)",
+    "duration_days": 30,
+    "data_per_day": "無限量",
+    "price": 6500,
+    "speed_policy": "用量超過35GB可能會被限速",
+    "notes": ["真正無限量", "用量超過35GB可能會被限速"]
+  }
+]

@@ -8,11 +8,13 @@ import type { ReactNode } from "react";
 type LiffContextType = {
   liff: Liff | null;
   liffError: string | null;
+  isLoggedIn: boolean;
 };
 
 const LiffContext = createContext<LiffContextType>({
   liff: null,
   liffError: null,
+  isLoggedIn: false,
 });
 
 export const useLiff = () => useContext(LiffContext);
@@ -20,6 +22,7 @@ export const useLiff = () => useContext(LiffContext);
 export default function LiffProvider({ children }: { children: ReactNode }) {
   const [liffObject, setLiffObject] = useState<Liff | null>(null);
   const [liffError, setLiffError] = useState<string | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // Execute liff.init() when the app is initialized
   useEffect(() => {
@@ -33,6 +36,8 @@ export default function LiffProvider({ children }: { children: ReactNode }) {
           .then(() => {
             console.log("LIFF init succeeded.");
             setLiffObject(liff);
+            // Check if user is logged in
+            setIsLoggedIn(liff.isLoggedIn());
           })
           .catch((error: Error) => {
             console.log("LIFF init failed.");
@@ -42,7 +47,7 @@ export default function LiffProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <LiffContext.Provider value={{ liff: liffObject, liffError }}>
+    <LiffContext.Provider value={{ liff: liffObject, liffError, isLoggedIn }}>
       {children}
     </LiffContext.Provider>
   );
