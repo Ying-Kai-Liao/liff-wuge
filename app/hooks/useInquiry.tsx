@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useEffect, createContext, useContext, ReactNode } from 'react';
-import { InquiryItem } from '../types';
+import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
+import { InquiryItem, Plan, Carrier, Country } from '../types';
 import { useLiff } from '../components/LiffProvider';
 import { 
   getUserProfile, 
@@ -34,22 +34,6 @@ const InquiryContext = createContext<InquiryContextType>({
   clearInquiryList: async () => {},
   sendInquiryToChat: async () => false
 });
-
-// Provider component
-export function InquiryProvider({ children }: { children: ReactNode }) {
-  const inquiryHook = useInquiryHook();
-  
-  return (
-    <InquiryContext.Provider value={inquiryHook}>
-      {children}
-    </InquiryContext.Provider>
-  );
-}
-
-// Hook to use the inquiry context
-export function useInquiry() {
-  return useContext(InquiryContext);
-}
 
 // Implementation of the inquiry hook
 function useInquiryHook(): InquiryContextType {
@@ -132,6 +116,7 @@ function useInquiryHook(): InquiryContextType {
 
     try {
       // Optimistically update UI
+      const previousList = [...inquiryList];
       setInquiryList(prev => prev.filter(item => item.planId !== planId));
 
       // Update in database
@@ -150,6 +135,7 @@ function useInquiryHook(): InquiryContextType {
     if (!userId) return;
 
     try {
+      const previousList = [...inquiryList];
       setInquiryList([]);
 
       // Update in database
@@ -226,4 +212,20 @@ function useInquiryHook(): InquiryContextType {
     clearInquiryList,
     sendInquiryToChat
   };
+}
+
+// Provider component
+export function InquiryProvider({ children }: { children: ReactNode }) {
+  const inquiryHook = useInquiryHook();
+  
+  return (
+    <InquiryContext.Provider value={inquiryHook}>
+      {children}
+    </InquiryContext.Provider>
+  );
+}
+
+// Hook to use the inquiry context
+export function useInquiry() {
+  return useContext(InquiryContext);
 }

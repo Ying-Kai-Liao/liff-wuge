@@ -17,7 +17,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const router = useRouter();
   
   // List of authorized LINE user IDs who can access admin
-  const adminLineIds = useMemo(() => ['U12345678901234567890123456789012'], []); // Replace with actual LINE user IDs
+  const adminLineIds = useMemo(() => ['U673c35728bf8bc8da575d191956cb925'], []); // Replace with actual LINE user IDs
   
   // Check if current user is admin
   const isAdmin = useMemo(() => {

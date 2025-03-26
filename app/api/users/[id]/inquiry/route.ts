@@ -2,8 +2,7 @@ import { NextResponse } from 'next/server';
 import { 
   getUserProfile, 
   addToInquiry, 
-  removeFromInquiry, 
-  clearInquiry 
+  removeFromInquiry
 } from '../../../../lib/services/userService';
 import { InquiryItem } from '../../../../types';
 

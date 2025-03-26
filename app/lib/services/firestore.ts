@@ -35,7 +35,7 @@ export async function getDocument<T>(collectionName: string, docId: string): Pro
 export async function getDocumentsByField<T>(
   collectionName: string, 
   field: string, 
-  value: any
+  value: string | number | boolean
 ): Promise<T[]> {
   const collectionRef = collection(db, collectionName);
   const q = query(collectionRef, where(field, '==', value));

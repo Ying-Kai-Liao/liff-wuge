@@ -13,7 +13,7 @@ interface Plan {
   days: number;
   dataAmount: string;
   price: number;
-  [key: string]: any;
+  [key: string]: string | number | boolean | object;
 }
 
 export async function POST() {

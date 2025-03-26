@@ -1,7 +1,6 @@
 import { UserProfile, InquiryItem } from '../../types';
 import { 
   getDocument, 
-  addDocument, 
   updateDocument 
 } from './firestore';
 import { doc, setDoc } from 'firebase/firestore';
