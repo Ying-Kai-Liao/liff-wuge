@@ -9,10 +9,10 @@ import { InquiryItem } from '../../../../types';
 // Get user's inquiry list
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const userProfile = await getUserProfile(params.id);
+    const userProfile = await getUserProfile((await params).id);
     
     if (!userProfile) {
       return NextResponse.json({ inquiryList: [] });
@@ -31,10 +31,10 @@ export async function GET(
 // Add item to inquiry list
 export async function POST(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const userId = params.id;
+    const userId = (await params).id;
     const body = await request.json();
     
     if (!body.planId || !body.carrierId || !body.countryId) {
@@ -65,10 +65,10 @@ export async function POST(
 // Remove item from inquiry list
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const userId = params.id;
+    const userId = (await params).id;
     const { searchParams } = new URL(request.url);
     const planId = searchParams.get('planId');
     

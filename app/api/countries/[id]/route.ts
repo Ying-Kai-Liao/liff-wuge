@@ -3,10 +3,10 @@ import { getCountryById } from '../../../lib/services/countryService';
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const country = await getCountryById(params.id);
+    const country = await getCountryById((await params).id);
     
     if (!country) {
       return NextResponse.json(

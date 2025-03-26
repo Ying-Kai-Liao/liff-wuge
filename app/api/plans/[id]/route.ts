@@ -3,10 +3,10 @@ import { getPlanById } from '../../../lib/services/planService';
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const plan = await getPlanById(params.id);
+    const plan = await getPlanById((await params).id);
     
     if (!plan) {
       return NextResponse.json(
