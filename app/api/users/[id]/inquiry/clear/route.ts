@@ -4,10 +4,10 @@ import { clearInquiry } from '../../../../../lib/services/userService';
 // Clear all items from inquiry list
 export async function POST(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const userId = params.id;
+    const userId = (await params).id;
     
     await clearInquiry(userId);
     
