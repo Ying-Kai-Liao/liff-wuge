@@ -301,9 +301,25 @@ function useCartHook(): CartContextType {
       // Send the template as is without any modifications
       await liff.sendMessages([
         {
-          type: 'flex',
-          altText: '測試eSIM訂單模板',
-          contents: orderTemplate
+          "type": "flex",
+          "altText": "this is a flex message",
+          "contents": {
+            "type": "bubble",
+            "body": {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "hello"
+                },
+                {
+                  "type": "text",
+                  "text": "world"
+                }
+              ]
+            }
+          }
         }
       ]);
       
