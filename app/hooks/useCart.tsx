@@ -191,27 +191,81 @@ function useCartHook(): CartContextType {
         })
       );
 
-      // Format the message
-      let message = "📱 eSIM 詢問清單：\n\n";
-      
-      detailedItems.forEach((item, index) => {
+      // Calculate total price
+      const totalPrice = detailedItems.reduce((sum, item) => {
         if (item.plan) {
-          message += `${index + 1}. ${item.plan.country} - ${item.plan.carrier}\n`;
-          message += `   ${item.plan.duration_days}天 / ${item.plan.data_per_day || item.plan.total_data} / ${item.plan.price}${item.plan.currency || 'TWD'}\n`;
-          if (item.plan.notes && item.plan.notes.length > 0) {
-            message += `   備註: ${item.plan.notes.join(', ')}\n`;
-          }
-          message += '\n';
+          return sum + (item.plan.price * item.quantity);
         }
-      });
-      
-      message += "請問以上方案有什麼問題想詢問的嗎？";
+        return sum;
+      }, 0);
 
-      // Send message back to LINE chat
+      // Import the Flex Message template
+      const orderTemplate = require('../cart/liff-template-order.json');
+      
+      // Create a deep copy of the template to avoid modifying the original
+      const flexMessage = JSON.parse(JSON.stringify(orderTemplate));
+      
+      // Update the items in the template
+      const itemsContainer = flexMessage.body.contents.find(
+        (content: any) => content.type === "box" && content.layout === "vertical" && content.margin === "md"
+      );
+      
+      if (itemsContainer && itemsContainer.contents) {
+        // Clear the sample items
+        itemsContainer.contents = [];
+        
+        // Add each plan as an item in the flex message
+        detailedItems.forEach((item, index) => {
+          if (item.plan) {
+            // Add the item
+            itemsContainer.contents.push({
+              type: "box",
+              layout: "baseline",
+              contents: [
+                {
+                  type: "text",
+                  text: `${item.plan.country} - ${item.plan.carrier} ${item.plan.duration_days}天`,
+                  size: "sm",
+                  color: "#333333",
+                  flex: 5
+                },
+                {
+                  type: "text",
+                  text: `x${item.quantity}`,
+                  size: "sm",
+                  color: "#666666",
+                  align: "end",
+                  flex: 1
+                }
+              ]
+            });
+            
+            // Add separator if not the last item
+            if (index < detailedItems.length - 1) {
+              itemsContainer.contents.push({
+                type: "separator",
+                margin: "sm"
+              });
+            }
+          }
+        });
+      }
+      
+      // Update the total price
+      const totalPriceBox = flexMessage.body.contents.find(
+        (content: any) => content.type === "box" && content.layout === "baseline" && content.margin === "md"
+      );
+      
+      if (totalPriceBox && totalPriceBox.contents && totalPriceBox.contents.length > 1) {
+        totalPriceBox.contents[1].text = `NT$${totalPrice}`;
+      }
+      
+      // Send flex message to LINE chat
       await liff.sendMessages([
         {
-          type: 'text',
-          text: message
+          type: 'flex',
+          altText: '您的eSIM訂單明細',
+          contents: flexMessage
         }
       ]);
 

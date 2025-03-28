@@ -1,0 +1,162 @@
+{
+    "type": "bubble",
+    "header": {
+      "type": "box",
+      "layout": "vertical",
+      "contents": [
+        {
+          "type": "text",
+          "text": "確認訂單",
+          "weight": "bold",
+          "size": "xl",
+          "align": "center"
+        }
+      ]
+    },
+    "hero": {
+      "type": "image",
+      "url": "https://www.firstlife.com.tw/FirstOnlineInsuranceWeb/assets/img/index/HomeSec1-1.png",
+      "size": "full",
+      "aspectRatio": "20:13",
+      "aspectMode": "cover",
+      "action": {
+        "type": "uri",
+        "uri": "https://liff-wuge.vercel.app"
+      }
+    },
+    "body": {
+      "type": "box",
+      "layout": "vertical",
+      "spacing": "sm",
+      "contents": [
+        {
+          "type": "text",
+          "text": "您的訂單明細",
+          "weight": "bold",
+          "size": "md"
+        },
+        {
+          "type": "separator",
+          "margin": "md"
+        },
+        {
+          "type": "box",
+          "layout": "vertical",
+          "margin": "md",
+          "spacing": "sm",
+          "contents": [
+            {
+              "type": "box",
+              "layout": "baseline",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "日本 KDDI+Softbank 8 天 eSIM",
+                  "size": "sm",
+                  "color": "#333333",
+                  "flex": 5
+                },
+                {
+                  "type": "text",
+                  "text": "x2",
+                  "size": "sm",
+                  "color": "#666666",
+                  "align": "end",
+                  "flex": 1
+                }
+              ]
+            },
+            {
+              "type": "separator",
+              "margin": "sm"
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "日本 docomo 10 天 eSIM",
+                  "size": "sm",
+                  "color": "#333333",
+                  "flex": 5
+                },
+                {
+                  "type": "text",
+                  "text": "x1",
+                  "size": "sm",
+                  "color": "#666666",
+                  "align": "end",
+                  "flex": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "separator",
+          "margin": "md"
+        },
+        {
+          "type": "box",
+          "layout": "baseline",
+          "margin": "md",
+          "contents": [
+            {
+              "type": "text",
+              "text": "總金額",
+              "size": "sm",
+              "color": "#aaaaaa",
+              "flex": 1
+            },
+            {
+              "type": "text",
+              "text": "NT$1497",
+              "size": "sm",
+              "color": "#333333",
+              "align": "end",
+              "flex": 1
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "請確認以上訂單內容後，再點選下方按鈕完成訂購。",
+          "wrap": true,
+          "color": "#666666",
+          "size": "sm",
+          "margin": "md"
+        }
+      ]
+    },
+    "footer": {
+      "type": "box",
+      "layout": "horizontal",
+      "spacing": "sm",
+      "contents": [
+        {
+          "type": "button",
+          "style": "primary",
+          "action": {
+            "type": "postback",
+            "label": "確認訂單",
+            "data": "action=confirm&order=multiple",
+            "displayText": "我確認訂單"
+          },
+          "color": "#1DB446"
+        },
+        {
+          "type": "button",
+          "style": "secondary",
+          "action": {
+            "type": "postback",
+            "label": "取消",
+            "data": "action=cancel",
+            "displayText": "取消訂單"
+          },
+          "color": "#999999"
+        }
+      ]
+    }
+  }
+  
