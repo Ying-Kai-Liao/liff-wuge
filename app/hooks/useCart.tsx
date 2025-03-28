@@ -27,7 +27,15 @@ type CartContextType = {
   removePlanFromCart: (planId: string) => Promise<void>;
   clearCart: () => Promise<void>;
   updatePlanQuantity: (planId: string, quantity: number) => Promise<void>;
-  sendCartToChat: () => Promise<boolean>;
+  sendCartToChat: (
+    userDetails?: {
+      name?: string;
+      phone?: string;
+      email?: string;
+      address?: string;
+      note?: string;
+    }
+  ) => Promise<boolean>;
   sendTemplateDirectly: () => Promise<boolean>;
 };
 
@@ -185,7 +193,15 @@ function useCartHook(): CartContextType {
   };
 
   // Send the cart to LINE chat
-  const sendCartToChat = async () => {
+  const sendCartToChat = async (
+    userDetails?: {
+      name?: string;
+      phone?: string;
+      email?: string;
+      address?: string;
+      note?: string;
+    }
+  ) => {
     if (!liff || !liff.isInClient || !liff.isInClient() || cart.length === 0) {
       setError(
         "Cannot send cart. Please make sure you have items in your list and are using LINE app."
@@ -211,74 +227,79 @@ function useCartHook(): CartContextType {
         return sum;
       }, 0);
 
+      // Get user profile for details
+      const profile = await liff.getProfile();
+
+      // Combine stored user profile with form details
+      const combinedUserDetails = {
+        ...userProfile,
+        ...userDetails, // Form details override stored profile
+      };
+
       // Import the Flex Message template
       const orderTemplate = require("../cart/liff-template-order.json");
 
       // Create a deep copy of the template to avoid modifying the original
       const flexMessage = JSON.parse(JSON.stringify(orderTemplate));
 
-      // Update the items in the template
-      const itemsContainer = flexMessage.body.contents.find(
-        (content: any) =>
-          content.type === "box" &&
-          content.layout === "vertical" &&
-          content.margin === "md"
-      );
+      // Find the order details container (first box in body contents)
+      const orderDetailsContainer = flexMessage.body.contents[0];
 
-      if (itemsContainer && itemsContainer.contents) {
-        // Clear the sample items
-        itemsContainer.contents = [];
+      // Find the items container within the order details
+      const itemsContainer = orderDetailsContainer.contents[2].contents;
 
-        // Add each plan as an item in the flex message
-        detailedItems.forEach((item, index) => {
-          if (item.plan) {
-            // Add the item
-            itemsContainer.contents.push({
-              type: "box",
-              layout: "baseline",
-              contents: [
-                {
-                  type: "text",
-                  text: `${item.plan.country} - ${item.plan.carrier} ${item.plan.duration_days}天`,
-                  size: "sm",
-                  color: "#333333",
-                  flex: 5,
-                },
-                {
-                  type: "text",
-                  text: `x${item.quantity}`,
-                  size: "sm",
-                  color: "#666666",
-                  align: "end",
-                  flex: 1,
-                },
-              ],
+      // Clear the sample items, keeping only the total price box at the end
+      // The total is the last item after separators
+      const totalPriceBox = itemsContainer[itemsContainer.length - 1];
+      itemsContainer.length = 0;
+
+      // Add each plan as an item in the flex message
+      detailedItems.forEach((item, index) => {
+        if (item.plan) {
+          // Add the item
+          itemsContainer.push({
+            type: "box",
+            layout: "baseline",
+            contents: [
+              {
+                type: "text",
+                text: `${item.plan.country} - ${item.plan.carrier} ${item.plan.duration_days}天`,
+                size: "sm",
+                color: "#333333",
+                flex: 5,
+              },
+              {
+                type: "text",
+                text: `x${item.quantity}`,
+                size: "sm",
+                color: "#666666",
+                align: "end",
+                flex: 1,
+              },
+            ],
+          });
+
+          // Add separator if not the last item
+          if (index < detailedItems.length - 1) {
+            itemsContainer.push({
+              type: "separator",
+              margin: "sm",
             });
-
-            // Add separator if not the last item
-            if (index < detailedItems.length - 1) {
-              itemsContainer.contents.push({
-                type: "separator",
-                margin: "sm",
-              });
-            }
           }
-        });
-      }
+        }
+      });
+
+      // Add separator before total
+      itemsContainer.push({
+        type: "separator",
+        margin: "md",
+      });
+
+      // Add the total price box back
+      itemsContainer.push(totalPriceBox);
 
       // Update the total price
-      const totalPriceBox = flexMessage.body.contents.find(
-        (content: any) =>
-          content.type === "box" &&
-          content.layout === "baseline" &&
-          content.margin === "md"
-      );
-
-      if (
-        totalPriceBox &&
-        totalPriceBox.contents &&
-        totalPriceBox.contents.length > 1
-      ) {
+      if (totalPriceBox && totalPriceBox.contents && totalPriceBox.contents.length > 1) {
         totalPriceBox.contents[1].text = `NT$${totalPrice}`;
       }
 
@@ -289,7 +310,7 @@ function useCartHook(): CartContextType {
       const filteredShippingDetails = [];
 
       // Only include address if it's provided
-      if (userProfile?.address) {
+      if (combinedUserDetails?.address) {
         filteredShippingDetails.push({
           type: "box",
           layout: "baseline",
@@ -303,7 +324,7 @@ function useCartHook(): CartContextType {
             },
             {
               type: "text",
-              text: userProfile.address,
+              text: combinedUserDetails.address,
               wrap: true,
               color: "#666666",
               size: "sm",
@@ -314,7 +335,7 @@ function useCartHook(): CartContextType {
       }
 
       // Only include phone if it's provided
-      if (userProfile?.phone) {
+      if (combinedUserDetails?.phone) {
         filteredShippingDetails.push({
           type: "box",
           layout: "baseline",
@@ -329,7 +350,7 @@ function useCartHook(): CartContextType {
             },
             {
               type: "text",
-              text: userProfile.phone,
+              text: combinedUserDetails.phone,
               wrap: true,
               color: "#666666",
               size: "sm",
@@ -340,7 +361,7 @@ function useCartHook(): CartContextType {
       }
 
       // Only include email if it's provided
-      if (userProfile?.email) {
+      if (combinedUserDetails?.email) {
         filteredShippingDetails.push({
           type: "box",
           layout: "baseline",
@@ -355,7 +376,7 @@ function useCartHook(): CartContextType {
             },
             {
               type: "text",
-              text: userProfile.email,
+              text: combinedUserDetails.email,
               wrap: true,
               color: "#666666",
               size: "sm",
@@ -366,7 +387,7 @@ function useCartHook(): CartContextType {
       }
 
       // Only include note if it's provided
-      if (userProfile?.note) {
+      if (combinedUserDetails?.note) {
         filteredShippingDetails.push({
           type: "box",
           layout: "baseline",
@@ -381,7 +402,7 @@ function useCartHook(): CartContextType {
             },
             {
               type: "text",
-              text: userProfile.note,
+              text: combinedUserDetails.note,
               wrap: true,
               color: "#666666",
               size: "sm",

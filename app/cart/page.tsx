@@ -250,7 +250,13 @@ export default function CartPage() {
       // Use the selected message type
       if (messageType === 'flex') {
         // Use the enhanced sendCartToChat function that utilizes the Flex Message template
-        success = await sendCartToChat();
+        success = await sendCartToChat({
+          name: userDetails.name || undefined,
+          phone: userDetails.phone || undefined,
+          email: userDetails.email || undefined,
+          address: userDetails.address || undefined,
+          note: userDetails.note || undefined
+        });
       } else {
         // Use the text message format
         success = await sendCartAsText();
