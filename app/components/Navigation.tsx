@@ -44,7 +44,7 @@ export default function Navigation() {
             className="font-bold text-xl text-[#006A71] flex items-center space-x-2"
           >
             <Image src="/wuge_logo.avif" alt="吳哥舖" width={32} height={32} />
-            <span>吳哥舖全球上網卡</span>
+            {/* <span>吳哥舖全球上網卡</span> */}
           </Link>
           
           <div className="flex items-center space-x-4">
