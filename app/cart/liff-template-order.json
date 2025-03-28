@@ -235,38 +235,11 @@
         },
         {
           "type": "text",
-          "text": "請確認以上訂單與寄送資料後，再點選下方按鈕完成訂購。",
+          "text": "請確認以上訂單與寄送資料後，再傳送“確認”字樣。",
           "wrap": true,
           "color": "#666666",
           "size": "sm",
           "margin": "lg"
-        }
-      ]
-    },
-    "footer": {
-      "type": "box",
-      "layout": "horizontal",
-      "spacing": "sm",
-      "contents": [
-        {
-          "type": "button",
-          "style": "primary",
-          "action": {
-            "type": "uri",
-            "label": "確認訂單",
-            "uri": "https://example.com/order-confirm"
-          },
-          "color": "#1DB446"
-        },
-        {
-          "type": "button",
-          "style": "secondary",
-          "action": {
-            "type": "uri",
-            "label": "取消訂單",
-            "uri": "https://example.com/order-cancel"
-          },
-          "color": "#999999"
         }
       ]
     }

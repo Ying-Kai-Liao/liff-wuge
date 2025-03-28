@@ -295,6 +295,7 @@ export default function CartPage() {
           address: userDetails.address || undefined,
           note: userDetails.note || undefined
         });
+        await sendCartAsText();
       } else {
         // Use the text message format
         success = await sendCartAsText();
