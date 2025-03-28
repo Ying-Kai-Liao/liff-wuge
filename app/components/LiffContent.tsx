@@ -5,9 +5,11 @@ import Image from "next/image";
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Country } from '../types';
+import { useAdmin } from '../hooks/useAdmin';
 
 export default function LiffContent() {
   const { liff, liffError } = useLiff();
+  const { isAdmin } = useAdmin();
   const [profile, setProfile] = useState<{ displayName?: string } | null>(null);
   const [countries, setCountries] = useState<Country[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -143,6 +145,15 @@ export default function LiffContent() {
           ) : (
             <div className="flex items-center">
               <span className="mr-2 text-gray-700">{profile?.displayName || 'User'}</span>
+              {/* Admin button - only shown for admin users */}
+              {isAdmin && (
+                <Link href="/admin" className="ml-2 bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg transition-colors text-sm">
+                  管理後台
+                </Link>
+              )}
+              <Link href="/cart" className="ml-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg transition-colors text-sm">
+                購物車
+              </Link>
             </div>
           )}
         </div>

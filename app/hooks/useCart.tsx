@@ -263,7 +263,7 @@ function useCartHook(): CartContextType {
             contents: [
               {
                 type: "text",
-                text: `${item.plan.country} - ${item.plan.carrier} ${item.plan.duration_days}天`,
+                text: `${item.plan.country} - ${item.plan.carrier}${item.plan.sim_type === 'physical' ? ' (實體)' : ' (eSIM)'} ${item.plan.duration_days}天 ${item.plan.title}`,
                 size: "sm",
                 color: "#333333",
                 flex: 5,
