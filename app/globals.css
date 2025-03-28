@@ -1,45 +1,48 @@
 @import "tailwindcss";
 
 :root {
-  --primary: #3b82f6;
-  --primary-dark: #2563eb;
-  --primary-light: #60a5fa;
-  --secondary: #10b981;
-  --secondary-dark: #059669;
-  --accent: #f59e0b;
-  --background: #ffffff;
-  --foreground: #171717;
+  /* New color palette */
+  --cream: #F2EFE7;
+  --light-teal: #9ACBD0;
+  --medium-teal: #48A6A7;
+  --dark-teal: #006A71;
+  
+  /* Update primary and accent colors to use the new palette */
+  --primary: var(--medium-teal);
+  --primary-dark: var(--dark-teal);
+  --primary-light: var(--light-teal);
+  --secondary: var(--dark-teal);
+  --secondary-dark: #004a4f;
+  --accent: var(--light-teal);
+  --background: var(--cream);
+  --foreground: #333333;
   --card: #ffffff;
-  --card-foreground: #171717;
+  --card-foreground: #333333;
   --border: #e5e7eb;
   --input: #e5e7eb;
-  --ring: #3b82f6;
+  --ring: var(--medium-teal);
   --radius: 0.5rem;
-  --font-klee-one: "Klee One", sans-serif;
   --font-noto-sans: "Noto Sans", sans-serif;
+  --font-serif: "Noto Sans", serif;
+  --font-ibm: "IBM Plex Sans", sans-serif;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-klee-one: var(--font-klee-one);
-  --font-noto-sans: var(--font-noto-sans);
+  --font-serif: var(--font-serif);
+  --font-ibm: var(--font-ibm);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-klee-one);
+  font-family: var(--font-ibm);
 }
 
 a {
-  /* color: var(--primary); */
   text-decoration: none;
-  transition: color 0.2s ease-in-out;
-}
-
-a:hover {
-  color: var(--primary-dark);
+  transition: 0.2s ease-in-out;
 }
 
 button, .button {
@@ -63,10 +66,10 @@ button, .button {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: var(--light-teal);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: var(--medium-teal);
 }

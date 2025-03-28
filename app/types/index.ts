@@ -28,6 +28,7 @@ export interface Plan {
   speed_policy: string
   sharing_supported: boolean
   device_limit?: number | null
+  is_popular?: boolean
   notes: string[]            // 條列式備註
 }
 

@@ -49,30 +49,7 @@ export default function AdminPage() {
 
   return (
     <ProtectedRoute adminOnly>
-      <div className="min-h-screen bg-gray-50">
-        <nav className="bg-white shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between h-16">
-              <div className="flex">
-                <div className="flex-shrink-0 flex items-center">
-                  <h1 className="text-xl font-bold text-gray-900">eSIM 管理後台</h1>
-                </div>
-              </div>
-              <div className="flex items-center">
-                {liff && liff.isLoggedIn() && (
-                  <div className="ml-3 relative flex items-center space-x-4">
-                    <button
-                      onClick={handleSignOut}
-                      className="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
-                    >
-                      登出
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </nav>
+      <div className="min-h-screen bg-gray-50 pt-10">
 
         <div className="py-10">
           <header>

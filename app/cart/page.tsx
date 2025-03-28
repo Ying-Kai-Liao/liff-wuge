@@ -59,6 +59,28 @@ export default function CartPage() {
   const [hasEsim, setHasEsim] = useState(false);
   const [hasPhysical, setHasPhysical] = useState(false);
 
+  // Get required fields based on cart contents
+  const getRequiredFields = () => {
+    const required = ['name']; // Name is always required
+    
+    if (hasEsim) {
+      required.push('email');
+    }
+    
+    if (hasPhysical) {
+      required.push('phone');
+      required.push('address');
+    }
+    
+    return required;
+  };
+
+  // Check if form is valid
+  const isFormValid = () => {
+    const requiredFields = getRequiredFields();
+    return requiredFields.every(field => !!userDetails[field as keyof UserDetails]);
+  };
+
   useEffect(() => {
     async function loadDetailedCart() {
       if (cart.length === 0) {
@@ -315,11 +337,7 @@ export default function CartPage() {
     if (isLoading) {
       return (
         <div className="flex justify-center items-center min-h-[200px]">
-          <div className="animate-pulse flex flex-col items-center">
-            <div className="h-12 w-12 mb-4 rounded-full bg-blue-200"></div>
-            <div className="h-4 w-48 bg-blue-200 rounded"></div>
-            <div className="mt-2 h-3 w-32 bg-blue-100 rounded"></div>
-          </div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#006A71]"></div>
         </div>
       );
     }
@@ -334,13 +352,13 @@ export default function CartPage() {
 
     if (detailedCart.length === 0) {
       return (
-        <div className="bg-blue-50 border border-blue-200 text-blue-700 p-6 rounded-lg mb-4 text-center">
+        <div className="bg-[#F2EFE7] border border-[#9ACBD0] text-[#006A71] p-6 rounded-lg mb-4 text-center">
           <div className="text-4xl mb-3">🛒</div>
           <h3 className="text-xl font-semibold mb-2">您的購物車目前是空的</h3>
           <p className="mb-4">瀏覽國家方案並將您感興趣的選項加入購物車</p>
           <Link 
             href="/"
-            className="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="inline-block px-4 py-2 bg-[#006A71] text-white rounded-lg hover:bg-[#004a4f] transition-colors"
           >
             探索 eSIM 方案
           </Link>
@@ -350,16 +368,16 @@ export default function CartPage() {
 
     return (
       <>
-        <div className="bg-blue-50 p-4 rounded-lg mb-6 flex items-center">
-          <div className="text-blue-700 text-xl mr-3">💡</div>
-          <p className="text-blue-700 text-sm">
+        <div className="bg-[#F2EFE7] p-4 rounded-lg mb-6 flex items-center">
+          <div className="text-[#006A71] text-xl mr-3">💡</div>
+          <p className="text-[#006A71] text-sm">
             請確認您的購物車內容，然後填寫您的聯絡資訊以完成訂單
           </p>
         </div>
         
         <div className="space-y-4 mb-8">
           {detailedCart.map((item) => (
-            <div key={item.planId} className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 hover:shadow-md transition-shadow">
+            <div key={item.planId} className="bg-white rounded-xl shadow-sm overflow-hidden border border-[#9ACBD0]/30 hover:shadow-md transition-shadow">
               {item.plan ? (
                 <div className="p-4">
                   <div className="flex justify-between items-start">
@@ -367,33 +385,33 @@ export default function CartPage() {
                       <div className="flex items-center gap-3 mb-2">
                         <div className="text-3xl">{item.plan.country.substring(0, 2)}</div>
                         <div>
-                          <h3 className="text-lg font-semibold">
+                          <h3 className="text-lg font-semibold text-[#006A71]">
                             {item.plan.country}
                           </h3>
-                          <div className="text-gray-600 text-sm">
+                          <div className="text-[#48A6A7] text-sm">
                             {item.plan.carrier}
                           </div>
                         </div>
                       </div>
                       
-                      <div className="bg-gray-50 rounded-lg p-3 mt-3">
+                      <div className="bg-[#F2EFE7] rounded-lg p-3 mt-3">
                         <div className="flex justify-between mb-2">
                           <div className="flex items-center">
-                            <div className="bg-blue-100 text-blue-800 rounded-full px-3 py-1 text-sm font-medium mr-2">
+                            <div className="bg-[#9ACBD0] text-[#006A71] rounded-full px-3 py-1 text-sm font-medium mr-2">
                               {item.plan.duration_days}天
                             </div>
-                            <div className="font-medium">
+                            <div className="font-medium text-[#006A71]">
                               {item.plan.plan_type === 'daily' ? `每日${item.plan.data_per_day}` : `總共${item.plan.total_data}`}
                             </div>
                           </div>
-                          <div className="text-xl font-bold text-blue-700">
+                          <div className="text-xl font-bold text-[#006A71]">
                             {item.plan.price} {item.plan.currency || 'TWD'}
                           </div>
                         </div>
                         
                         <div className="flex flex-wrap gap-2 mt-2">
                           <span className={`${
-                            item.plan.sim_type === 'esim' ? 'bg-green-100 text-green-800' : 'bg-purple-100 text-purple-800'
+                            item.plan.sim_type === 'esim' ? 'bg-[#9ACBD0]/50 text-[#006A71]' : 'bg-[#48A6A7]/50 text-[#006A71]'
                           } text-xs px-2 py-1 rounded`}>
                             {item.plan.sim_type === 'esim' ? 'eSIM' : '實體 SIM'}
                           </span>
@@ -404,20 +422,20 @@ export default function CartPage() {
                         <div className="flex items-center">
                           <button
                             onClick={() => handleUpdateQuantity(item.planId, Math.max(1, item.quantity - 1))}
-                            className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-700 hover:bg-gray-200"
+                            className="w-8 h-8 rounded-full bg-[#F2EFE7] text-[#006A71] hover:bg-[#F2EFE7] border border-[#9ACBD0]"
                           >
                             -
                           </button>
                           <span className="mx-3 font-medium">{item.quantity}</span>
                           <button
                             onClick={() => handleUpdateQuantity(item.planId, item.quantity + 1)}
-                            className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 hover:bg-blue-200"
+                            className="w-8 h-8 rounded-full bg-[#F2EFE7] text-[#006A71] hover:bg-[#F2EFE7] border border-[#9ACBD0]"
                           >
                             +
                           </button>
                         </div>
                         
-                        <div className="ml-auto text-lg font-bold text-blue-700">
+                        <div className="ml-auto text-lg font-bold text-[#006A71]">
                           小計: {item.plan.price * item.quantity} {item.plan.currency || 'TWD'}
                         </div>
                       </div>
@@ -439,301 +457,260 @@ export default function CartPage() {
           ))}
         </div>
         
-        <div className="bg-gray-50 p-4 rounded-lg mb-6">
-          <div className="flex justify-between items-center text-lg font-bold">
-            <span>總計</span>
-            <span className="text-blue-700">{calculateTotal()} TWD</span>
+        <div className="bg-white rounded-lg shadow-sm p-4 mb-6 border border-[#9ACBD0]/30">
+          <div className="flex justify-between mb-2">
+            <div className="font-medium">小計</div>
+            <div>{calculateTotal()} TWD</div>
           </div>
           
           {isAdmin && (
-            <div className="mt-4 border-t pt-4">
-              <div className="text-sm font-medium text-gray-700 mb-2">管理員折扣設定</div>
-              <div className="flex flex-col sm:flex-row gap-3">
-                <div className="flex-1">
-                  <label htmlFor="discountPercentage" className="block text-xs text-gray-500 mb-1">
-                    折扣百分比 (%)
-                  </label>
-                  <input
-                    type="number"
-                    id="discountPercentage"
-                    min="0"
-                    max="100"
-                    value={discountPercentage}
-                    onChange={(e) => setDiscountPercentage(Number(e.target.value))}
-                    className="w-full p-2 border border-gray-300 rounded-md text-sm"
-                  />
-                </div>
-                <div className="flex-1">
-                  <label htmlFor="discountCode" className="block text-xs text-gray-500 mb-1">
-                    折扣代碼
-                  </label>
-                  <input
-                    type="text"
-                    id="discountCode"
-                    value={discountCode}
-                    onChange={(e) => setDiscountCode(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded-md text-sm"
-                    placeholder="例如: SUMMER10"
-                  />
-                </div>
+            <div className="mb-4 pt-2 border-t border-gray-100">
+              <div className="flex items-center mb-2">
+                <input
+                  type="number"
+                  min="0"
+                  max="100"
+                  value={discountPercentage}
+                  onChange={(e) => setDiscountPercentage(Number(e.target.value))}
+                  className="w-16 p-1 border border-[#9ACBD0] rounded mr-2 text-center"
+                />
+                <span className="mr-2">% 折扣</span>
+                <input
+                  type="text"
+                  placeholder="折扣代碼"
+                  value={discountCode}
+                  onChange={(e) => setDiscountCode(e.target.value)}
+                  className="flex-1 p-1 border border-[#9ACBD0] rounded"
+                />
               </div>
               
               {discountPercentage > 0 && (
-                <div className="mt-3 flex justify-between items-center text-md font-bold">
-                  <span className="text-green-600">折扣後總計</span>
-                  <span className="text-green-600">{calculateDiscountedTotal()} TWD</span>
+                <div className="flex justify-between text-[#006A71] font-medium">
+                  <div>折扣後金額</div>
+                  <div>{calculateDiscountedTotal()} TWD</div>
                 </div>
               )}
             </div>
           )}
+          
+          <div className="flex justify-between text-lg font-bold text-[#006A71] pt-2 border-t border-gray-100">
+            <div>總計</div>
+            <div>{isAdmin && discountPercentage > 0 ? calculateDiscountedTotal() : calculateTotal()} TWD</div>
+          </div>
         </div>
         
-        <div className="flex flex-col sm:flex-row gap-3 justify-between">
+        <div className="flex justify-between">
           <button
             onClick={handleClearCart}
-            className="px-4 py-2 border border-gray-300 bg-white text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center"
+            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
           >
-            <span className="mr-2">🗑️</span> 清空購物車
+            清空購物車
           </button>
           
           <button
             onClick={handleProceedToDetails}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center"
+            className="px-6 py-2 bg-[#006A71] text-white rounded-lg hover:bg-[#004a4f] transition-colors"
           >
-            <span className="mr-2">👤</span> 填寫聯絡資料
+            填寫資料
           </button>
         </div>
       </>
     );
   };
 
-  const renderDetailsForm = () => {
+  const renderUserDetailsForm = () => {
+    const requiredFields = getRequiredFields();
+    
     return (
       <>
-        <div className="bg-blue-50 p-4 rounded-lg mb-6 flex items-center">
-          <div className="text-blue-700 text-xl mr-3">💡</div>
-          <p className="text-blue-700 text-sm">
-            請填寫您的聯絡資料，以便我們處理您的訂單
-          </p>
+        <div className="bg-[#F2EFE7] p-4 rounded-lg mb-6">
+          <h3 className="font-semibold text-[#006A71] mb-2">填寫您的聯絡資訊</h3>
+          <p className="text-sm text-gray-600">我們將使用這些資訊處理您的訂單</p>
+          
+          {hasEsim && hasPhysical && (
+            <div className="mt-3 p-3 bg-[#fffcf3] rounded-md">
+              <div className="flex items-start">
+                <div className="text-amber-600 mr-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="text-sm">
+                  <p className="font-medium">您的購物車包含 eSIM 和實體 SIM 卡</p>
+                  <p>請提供所有必填資訊以完成訂單</p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
         
-        <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 p-6 mb-6">
-          <h3 className="text-xl font-bold mb-4">聯絡資料</h3>
-          
-          <div className="space-y-4">
+        <div className="bg-white rounded-lg shadow-sm p-6 mb-6 border border-[#9ACBD0]/30">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">姓名 *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                姓名 <span className="text-red-500">*</span>
+              </label>
               <input
                 type="text"
                 name="name"
                 value={userDetails.name}
                 onChange={handleInputChange}
-                className="w-full p-2 border border-gray-300 rounded-md"
+                className={`w-full p-2 border ${!userDetails.name && 'border-red-300'} rounded-lg focus:ring-2 focus:ring-[#48A6A7] focus:border-transparent`}
                 required
               />
+              {!userDetails.name && (
+                <p className="mt-1 text-sm text-red-500">請輸入姓名</p>
+              )}
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">電子郵件 *</label>
-              <input
-                type="email"
-                name="email"
-                value={userDetails.email}
-                onChange={handleInputChange}
-                className="w-full p-2 border border-gray-300 rounded-md"
-                required
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">電話 *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                電話 {requiredFields.includes('phone') && <span className="text-red-500">*</span>}
+                {hasPhysical && <span className="text-xs text-[#006A71] ml-1">（實體 SIM 卡需要）</span>}
+              </label>
               <input
                 type="tel"
                 name="phone"
                 value={userDetails.phone}
                 onChange={handleInputChange}
-                className="w-full p-2 border border-gray-300 rounded-md"
-                required
+                className={`w-full p-2 border ${requiredFields.includes('phone') && !userDetails.phone && 'border-red-300'} rounded-lg focus:ring-2 focus:ring-[#48A6A7] focus:border-transparent`}
+                required={requiredFields.includes('phone')}
               />
-            </div>
-            
-            {hasPhysical && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  地址 {hasPhysical ? '*' : '(選填)'}
-                </label>
-                <input
-                  type="text"
-                  name="address"
-                  value={userDetails.address}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                  required={hasPhysical}
-                />
-              </div>
-            )}
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">備註 (選填)</label>
-              <textarea
-                name="note"
-                value={userDetails.note}
-                onChange={handleInputChange}
-                className="w-full p-2 border border-gray-300 rounded-md"
-                rows={3}
-              />
+              {requiredFields.includes('phone') && !userDetails.phone && (
+                <p className="mt-1 text-sm text-red-500">請輸入電話號碼</p>
+              )}
             </div>
           </div>
-        </div>
-        
-        <div className="bg-gray-50 p-4 rounded-lg mb-6">
-          <h3 className="font-bold mb-3">訂單摘要</h3>
           
-          <div className="space-y-2">
-            {detailedCart.map((item) => (
-              item.plan && (
-                <div key={item.planId} className="flex justify-between">
-                  <span>
-                    {item.plan.country} {item.plan.sim_type === 'esim' ? '(eSIM)' : '(實體SIM)'} x {item.quantity}
-                  </span>
-                  <span>{item.plan.price * item.quantity} {item.plan.currency || 'TWD'}</span>
-                </div>
-              )
-            ))}
-            
-            <div className="border-t border-gray-200 pt-2 mt-2 flex justify-between font-bold">
-              <span>總計</span>
-              <span className="text-blue-700">{calculateTotal()} TWD</span>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Email {requiredFields.includes('email') && <span className="text-red-500">*</span>}
+              {hasEsim && <span className="text-xs text-[#006A71] ml-1">（eSIM 需要）</span>}
+            </label>
+            <input
+              type="email"
+              name="email"
+              value={userDetails.email}
+              onChange={handleInputChange}
+              className={`w-full p-2 border ${requiredFields.includes('email') && !userDetails.email && 'border-red-300'} rounded-lg focus:ring-2 focus:ring-[#48A6A7] focus:border-transparent`}
+              required={requiredFields.includes('email')}
+            />
+            {requiredFields.includes('email') && !userDetails.email && (
+              <p className="mt-1 text-sm text-red-500">請輸入電子郵件地址</p>
+            )}
+          </div>
+          
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              地址 {requiredFields.includes('address') && <span className="text-red-500">*</span>}
+              {hasPhysical && <span className="text-xs text-[#006A71] ml-1">（實體 SIM 卡需要）</span>}
+            </label>
+            <input
+              type="text"
+              name="address"
+              value={userDetails.address}
+              onChange={handleInputChange}
+              className={`w-full p-2 border ${requiredFields.includes('address') && !userDetails.address && 'border-red-300'} rounded-lg focus:ring-2 focus:ring-[#48A6A7] focus:border-transparent`}
+              required={requiredFields.includes('address')}
+            />
+            {requiredFields.includes('address') && !userDetails.address && (
+              <p className="mt-1 text-sm text-red-500">請輸入地址</p>
+            )}
+          </div>
+          
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">備註</label>
+            <textarea
+              name="note"
+              value={userDetails.note}
+              onChange={handleInputChange}
+              className="w-full p-2 border border-[#9ACBD0] rounded-lg focus:ring-2 focus:ring-[#48A6A7] focus:border-transparent"
+              rows={3}
+            ></textarea>
+          </div>
+          
+          {isAdmin && (
+            <div className="mb-4">
+              <button
+                onClick={fillTestData}
+                className="text-[#48A6A7] hover:text-[#006A71] text-sm"
+              >
+                填入測試資料
+              </button>
             </div>
-          </div>
+          )}
+          
+          {/* <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">訊息格式</label>
+            <div className="flex space-x-4">
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="messageType"
+                  value="flex"
+                  checked={messageType === 'flex'}
+                  onChange={() => setMessageType('flex')}
+                  className="mr-2 text-[#006A71]"
+                />
+                <span>精美訊息</span>
+              </label>
+              
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="messageType"
+                  value="text"
+                  checked={messageType === 'text'}
+                  onChange={() => setMessageType('text')}
+                  className="mr-2 text-[#006A71]"
+                />
+                <span>純文字</span>
+              </label>
+            </div>
+          </div> */}
         </div>
         
-        <div className="mb-6">
-          <h3 className="text-lg font-medium mb-2">訊息格式</h3>
-          <div className="flex space-x-4">
-            <label className="flex items-center">
-              <input
-                type="radio"
-                name="messageType"
-                checked={messageType === 'flex'}
-                onChange={() => setMessageType('flex')}
-                className="mr-2"
-              />
-              <span>精美卡片格式</span>
-            </label>
-            <label className="flex items-center">
-              <input
-                type="radio"
-                name="messageType"
-                checked={messageType === 'text'}
-                onChange={() => setMessageType('text')}
-                className="mr-2"
-              />
-              <span>純文字格式</span>
-            </label>
-          </div>
-        </div>
-        
-        <div className="flex flex-col sm:flex-row gap-3 justify-between">
+        <div className="flex justify-between">
           <button
             onClick={handleBackToCart}
-            className="px-4 py-2 border border-gray-300 bg-white text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center"
+            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
           >
-            <span className="mr-2">←</span> 返回購物車
+            返回購物車
           </button>
           
           <button
             onClick={handleSubmitOrder}
-            disabled={isSending || !liff?.isInClient() || !userDetails.name || !userDetails.email || !userDetails.phone || (hasPhysical && !userDetails.address)}
-            className={`px-4 py-2 rounded-lg font-medium flex items-center justify-center ${
-              !userDetails.name || !userDetails.email || !userDetails.phone || (hasPhysical && !userDetails.address)
+            disabled={isSending || !isFormValid()}
+            className={`px-6 py-2 rounded-lg transition-colors ${
+              isSending || !isFormValid()
                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : !liff?.isInClient()
-                  ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                  : isSending
-                    ? 'bg-blue-400 text-white cursor-wait'
-                    : sendSuccess
-                      ? 'bg-green-500 text-white'
-                      : 'bg-blue-600 text-white hover:bg-blue-700'
+                : 'bg-[#006A71] text-white hover:bg-[#004a4f]'
             }`}
           >
-            {sendSuccess ? (
-              <>
-                <span className="mr-2">✓</span> 已傳送訂單
-              </>
-            ) : (
-              <>
-                <span className="mr-2">💬</span> 傳送訂單至 LINE
-              </>
-            )}
+            {isSending ? '處理中...' : '送出訂單'}
           </button>
         </div>
-        
-        {/* <div className="mb-4 text-center text-sm text-gray-500">
-          <button 
-            onClick={fillTestData}
-            className="text-sm text-blue-500 hover:text-blue-700 mr-4"
-          >
-            填入測試資料
-          </button>
-          
-          <button 
-            onClick={handleSendTemplateDirectly}
-            className="text-sm text-green-500 hover:text-green-700"
-          >
-            直接發送模板測試
-          </button>
-        </div> */}
-        
-        {!liff?.isInClient() && (
-          <div className="mt-4 text-center text-sm text-gray-500">
-            傳送至 LINE 對話功能僅在 LINE App 內可用
-          </div>
-        )}
       </>
     );
   };
 
-  const handleSendTemplateDirectly = async () => {
-    try {
-      setIsSending(true);
-      const success = await sendTemplateDirectly();
-      
-      if (success) {
-        setSendSuccess(true);
-        setTimeout(() => {
-          setSendSuccess(false);
-        }, 3000);
-      } else {
-        setError('傳送模板失敗，請稍後再試');
-      }
-    } catch (err) {
-      console.error('Error sending template to chat:', err);
-      setError('傳送模板失敗，請稍後再試');
-    } finally {
-      setIsSending(false);
-    }
-  };
-
   return (
-    <TravelLayout 
-      title="購物車" 
-      showBackButton={true}
-      backUrl="/"
-    >
+    <TravelLayout title="購物車">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold mb-2">
-          {currentStep === 'cart' ? '您的購物車' : '填寫聯絡資料'}
-        </h2>
-        <p className="text-gray-600">
-          {currentStep === 'cart' 
-            ? '查看您選擇的 eSIM 方案，並進行結帳'
-            : '請填寫您的聯絡資料，以便我們處理您的訂單'
-          }
-        </p>
+        <h1 className="text-2xl font-bold text-[#006A71] mb-2">購物車</h1>
+        <p className="text-gray-600">查看您選擇的 eSIM 方案並完成訂單</p>
       </div>
       
-      {currentStep === 'cart' ? renderCartContent() : renderDetailsForm()}
+      {sendSuccess && (
+        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-4 flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+          </svg>
+          <p>訂單已成功發送到您的 LINE 聊天室！</p>
+        </div>
+      )}
+      
+      {currentStep === 'cart' ? renderCartContent() : renderUserDetailsForm()}
     </TravelLayout>
   );
 }

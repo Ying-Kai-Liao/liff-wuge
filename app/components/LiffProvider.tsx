@@ -3,6 +3,7 @@
 import { useState, useEffect, createContext, useContext } from "react";
 import type { Liff } from "@line/liff";
 import type { ReactNode } from "react";
+import {saveUserProfile} from "../lib/services/userService";
 
 // Create a context for LIFF
 type LiffContextType = {
@@ -23,6 +24,7 @@ export default function LiffProvider({ children }: { children: ReactNode }) {
   const [liffObject, setLiffObject] = useState<Liff | null>(null);
   const [liffError, setLiffError] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [profile, setProfile] = useState<{ displayName?: string } | null>(null);
 
   // Execute liff.init() when the app is initialized
   useEffect(() => {
@@ -38,6 +40,17 @@ export default function LiffProvider({ children }: { children: ReactNode }) {
             setLiffObject(liff);
             // Check if user is logged in
             setIsLoggedIn(liff.isLoggedIn());
+            if (liff.isLoggedIn()) {
+              liff
+                .getProfile()
+                .then((profile) => {
+                  setProfile({ displayName: profile.displayName });
+                })
+                .catch((error: Error) => {
+                  console.log("LIFF getProfile failed.");
+                  setLiffError(error.toString());
+                });
+            }
           })
           .catch((error: Error) => {
             console.log("LIFF init failed.");

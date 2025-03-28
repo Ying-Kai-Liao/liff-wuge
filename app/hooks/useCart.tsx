@@ -17,6 +17,8 @@ import {
   updateCartQuantity,
 } from "../lib/services/userService";
 import { getPlanById } from "../lib/services/planService";
+import { app as firebaseApp } from '../lib/firebase';
+import { deleteApp } from 'firebase/app';
 
 // Create context type
 type CartContextType = {
@@ -60,6 +62,26 @@ function useCartHook(): CartContextType {
   const [error, setError] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [userProfile, setUserProfile] = useState<any>(null);
+
+  // Add Firebase cleanup on page unload to prevent CORS errors
+  useEffect(() => {
+    const unloadCallback = () => {
+      try {
+        if (firebaseApp) {
+          deleteApp(firebaseApp)
+            .then(() => console.log("Firebase app deleted on page unload"))
+            .catch(err => console.error("Error deleting Firebase app:", err));
+        }
+      } catch (err) {
+        console.error("Error in Firebase cleanup:", err);
+      }
+    };
+    
+    window.addEventListener("beforeunload", unloadCallback);
+    return () => {
+      window.removeEventListener("beforeunload", unloadCallback);
+    };
+  }, []);
 
   // Load user profile and cart when LIFF is initialized
   useEffect(() => {

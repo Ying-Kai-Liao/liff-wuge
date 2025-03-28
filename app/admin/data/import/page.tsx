@@ -240,8 +240,8 @@ export default function ImportDataPage() {
   };
 
   return (
-    <ProtectedRoute>
-      <div className="container mx-auto px-4 py-8">
+    <ProtectedRoute adminOnly>
+      <div className="container mx-auto px-4 py-8 pt-20">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-gray-900">資料匯入與客製方案</h1>
           <Link href="/admin/data" className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-md text-sm">
