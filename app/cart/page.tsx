@@ -150,67 +150,17 @@ export default function CartPage() {
     try {
       setIsSending(true);
       
-      // Format the message with cart items and user details
-      const cartItems = detailedCart.map(item => {
-        if (!item.plan) return null;
-        
-        return {
-          plan: item.plan,
-          quantity: item.quantity
-        };
-      }).filter(Boolean);
+      // Use the enhanced sendCartToChat function that utilizes the Flex Message template
+      const success = await sendCartToChat();
       
-      let message = "📱 eSIM 訂單：\n\n";
-      
-      // Add cart items
-      cartItems.forEach((item, index) => {
-        if (item && item.plan) {
-          message += `${index + 1}. ${item.plan.country} - ${item.plan.carrier}\n`;
-          message += `   ${item.plan.duration_days}天 / ${item.plan.plan_type === 'daily' ? `每日${item.plan.data_per_day}` : `總共${item.plan.total_data}`}\n`;
-          message += `   ${item.plan.price}${item.plan.currency || 'TWD'} x ${item.quantity} = ${item.plan.price * item.quantity}${item.plan.currency || 'TWD'}\n`;
-          message += `   類型: ${item.plan.sim_type === 'esim' ? 'eSIM' : '實體 SIM'}\n\n`;
-        }
-      });
-      
-      // Calculate total
-      const total = cartItems.reduce((sum, item) => {
-        if (item && item.plan) {
-          return sum + (item.plan.price * item.quantity);
-        }
-        return sum;
-      }, 0);
-      
-      message += `總計: ${total} TWD\n\n`;
-      
-      // Add user details
-      message += "客戶資料:\n";
-      message += `姓名: ${userDetails.name}\n`;
-      message += `電話: ${userDetails.phone}\n`;
-      message += `Email: ${userDetails.email}\n`;
-      
-      if (hasPhysical && userDetails.address) {
-        message += `地址: ${userDetails.address}\n`;
+      if (success) {
+        setSendSuccess(true);
+        setTimeout(() => {
+          setSendSuccess(false);
+        }, 3000);
+      } else {
+        setError('傳送失敗，請稍後再試');
       }
-      
-      if (userDetails.note) {
-        message += `\n備註: ${userDetails.note}\n`;
-      }
-      
-      // Send message back to LINE chat
-      await liff.sendMessages([
-        {
-          type: 'text',
-          text: message
-        }
-      ]);
-      
-      // Clear the cart after sending
-      await clearCart();
-      
-      setSendSuccess(true);
-      setTimeout(() => {
-        setSendSuccess(false);
-      }, 3000);
     } catch (err) {
       console.error('Error sending order to chat:', err);
       setError('傳送失敗，請稍後再試');
