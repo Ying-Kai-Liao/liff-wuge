@@ -325,9 +325,9 @@ function useCartHook(): CartContextType {
               "aspectRatio": "20:13",
               "aspectMode": "cover",
               "action": {
-                "type": "location",
+                "type": "uri",
                 "label": "View",
-                // "uri": "https://liff-wuge.vercel.app"
+                "uri": "https://liff-wuge.vercel.app"
               }
             },
             "body": {
@@ -444,10 +444,9 @@ function useCartHook(): CartContextType {
                   "type": "button",
                   "style": "primary",
                   "action": {
-                    "type": "postback",
-                    "label": "確認訂單",
-                    "data": "action=confirm&order=multiple",
-                    "displayText": "我確認訂單"
+                    "type": "uri",
+                "label": "View",
+                "uri": "https://liff-wuge.vercel.app"
                   },
                   "color": "#1DB446"
                 },
@@ -455,10 +454,9 @@ function useCartHook(): CartContextType {
                   "type": "button",
                   "style": "secondary",
                   "action": {
-                    "type": "postback",
-                    "label": "取消",
-                    "data": "action=cancel",
-                    "displayText": "取消訂單"
+                    "type": "uri",
+                    "label": "View",
+                    "uri": "https://liff-wuge.vercel.app"
                   },
                   "color": "#999999"
                 }
