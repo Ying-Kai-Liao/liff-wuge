@@ -6,6 +6,7 @@ import { Plan, SimType } from '../types';
 import { useLiff } from '../components/LiffProvider';
 import TravelLayout from '../components/TravelLayout';
 import Link from 'next/link';
+import { useAdmin } from '../hooks/useAdmin';
 
 type DetailedCartItem = {
   planId: string;
@@ -24,6 +25,7 @@ type UserDetails = {
 
 export default function CartPage() {
   const { liff } = useLiff();
+  const { isAdmin } = useAdmin();
   const { 
     cart, 
     removePlanFromCart, 
@@ -40,6 +42,10 @@ export default function CartPage() {
   const [currentStep, setCurrentStep] = useState<'cart' | 'details'>('cart');
   const [messageType, setMessageType] = useState<'flex' | 'text'>('flex');
   
+  // Admin discount
+  const [discountPercentage, setDiscountPercentage] = useState<number>(0);
+  const [discountCode, setDiscountCode] = useState<string>('');
+
   // User details form
   const [userDetails, setUserDetails] = useState<UserDetails>({
     name: '',
@@ -199,6 +205,16 @@ export default function CartPage() {
       
       message += `總計: ${total} TWD\n\n`;
       
+      // Add discount if applied
+      if (isAdmin && discountPercentage > 0) {
+        const discountedTotal = Math.round(total * (1 - discountPercentage / 100));
+        message += `折扣: ${discountPercentage}%\n`;
+        if (discountCode) {
+          message += `折扣代碼: ${discountCode}\n`;
+        }
+        message += `折扣後總計: ${discountedTotal} TWD\n\n`;
+      }
+      
       // Add user details
       message += "客戶資料:\n";
       message += `姓名: ${userDetails.name}\n`;
@@ -285,6 +301,14 @@ export default function CartPage() {
       }
       return total;
     }, 0);
+  };
+
+  const calculateDiscountedTotal = () => {
+    const total = calculateTotal();
+    if (discountPercentage > 0) {
+      return Math.round(total * (1 - discountPercentage / 100));
+    }
+    return total;
   };
 
   const renderCartContent = () => {
@@ -420,6 +444,48 @@ export default function CartPage() {
             <span>總計</span>
             <span className="text-blue-700">{calculateTotal()} TWD</span>
           </div>
+          
+          {isAdmin && (
+            <div className="mt-4 border-t pt-4">
+              <div className="text-sm font-medium text-gray-700 mb-2">管理員折扣設定</div>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex-1">
+                  <label htmlFor="discountPercentage" className="block text-xs text-gray-500 mb-1">
+                    折扣百分比 (%)
+                  </label>
+                  <input
+                    type="number"
+                    id="discountPercentage"
+                    min="0"
+                    max="100"
+                    value={discountPercentage}
+                    onChange={(e) => setDiscountPercentage(Number(e.target.value))}
+                    className="w-full p-2 border border-gray-300 rounded-md text-sm"
+                  />
+                </div>
+                <div className="flex-1">
+                  <label htmlFor="discountCode" className="block text-xs text-gray-500 mb-1">
+                    折扣代碼
+                  </label>
+                  <input
+                    type="text"
+                    id="discountCode"
+                    value={discountCode}
+                    onChange={(e) => setDiscountCode(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded-md text-sm"
+                    placeholder="例如: SUMMER10"
+                  />
+                </div>
+              </div>
+              
+              {discountPercentage > 0 && (
+                <div className="mt-3 flex justify-between items-center text-md font-bold">
+                  <span className="text-green-600">折扣後總計</span>
+                  <span className="text-green-600">{calculateDiscountedTotal()} TWD</span>
+                </div>
+              )}
+            </div>
+          )}
         </div>
         
         <div className="flex flex-col sm:flex-row gap-3 justify-between">

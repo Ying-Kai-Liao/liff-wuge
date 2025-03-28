@@ -71,15 +71,15 @@ export default function CountriesPage() {
             key={country.id}
             className="block transform transition duration-300 hover:scale-105"
           >
-            <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg">
-              <div className="p-5">
+            <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg h-full">
+              <div className="p-5 flex flex-col h-full">
                 <div className="flex items-center gap-3 mb-3">
                   <span className="text-4xl" role="img" aria-label={country.name}>
                     {country.flagIcon}
                   </span>
-                  <h2 className="text-xl font-semibold">{country.name}</h2>
+                  <span className="text-lg font-semibold">{country.name}</span>
                 </div>
-                <p className="text-gray-600">{country.description}</p>
+                <p className="text-gray-600 line-clamp-2 mb-auto">{country.description}</p>
                 <div className="mt-4 flex justify-end">
                   <span className="inline-flex items-center text-blue-600 text-sm font-medium">
                     查看方案 <span className="ml-1">→</span>

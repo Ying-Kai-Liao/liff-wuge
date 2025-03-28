@@ -84,74 +84,80 @@ export default function AdminPage() {
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
               <div className="px-4 py-8 sm:px-0">
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {/* Data Management Card */}
-                  <div className="bg-white overflow-hidden shadow rounded-lg">
+                  <Link href="/admin/data" className="bg-white overflow-hidden shadow rounded-lg">
                     <div className="px-4 py-5 sm:p-6">
-                      <h3 className="text-lg font-medium leading-6 text-gray-900">資料管理</h3>
-                      <div className="mt-2 max-w-xl text-sm text-gray-500">
-                        <p>管理應用程式中的國家、電信商和方案資料。</p>
-                      </div>
-                      <div className="mt-5">
-                        <Link
-                          href="/admin/data"
-                          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"
-                        >
-                          管理資料
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Import Plans Card */}
-                  <div className="bg-white overflow-hidden shadow rounded-lg">
-                    <div className="px-4 py-5 sm:p-6">
-                      <h3 className="text-lg font-medium leading-6 text-gray-900">導入方案</h3>
-                      <div className="mt-2 max-w-xl text-sm text-gray-500">
-                        <p>從 JSON 檔案導入新的 eSIM 方案資料。</p>
-                      </div>
-                      <div className="mt-5">
-                        <Link
-                          href="/import-japan-plans"
-                          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"
-                        >
-                          導入方案
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Delete Duplicates Card */}
-                  <div className="bg-white overflow-hidden shadow rounded-lg">
-                    <div className="px-4 py-5 sm:p-6">
-                      <h3 className="text-lg font-medium leading-6 text-gray-900">刪除重複資料</h3>
-                      <div className="mt-2 max-w-xl text-sm text-gray-500">
-                        <p>刪除資料庫中的重複方案資料。</p>
-                      </div>
-                      <div className="mt-5">
-                        <button
-                          onClick={handleDeleteDuplicates}
-                          disabled={isDeleting}
-                          className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white ${
-                            isDeleting
-                              ? 'bg-red-400 cursor-not-allowed'
-                              : 'bg-red-600 hover:bg-red-700'
-                          }`}
-                        >
-                          {isDeleting ? '處理中...' : '刪除重複資料'}
-                        </button>
-                      </div>
-
-                      {deleteResult && (
-                        <div
-                          className={`mt-3 p-3 rounded-md ${
-                            deleteResult.success
-                              ? 'bg-green-50 text-green-800'
-                              : 'bg-red-50 text-red-800'
-                          }`}
-                        >
-                          {deleteResult.message}
+                      <div className="flex items-center">
+                        <div className="flex-shrink-0 bg-blue-500 rounded-md p-3">
+                          <svg className="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+                          </svg>
                         </div>
-                      )}
+                        <div className="ml-5 w-0 flex-1">
+                          <dl>
+                            <dt className="text-sm font-medium text-gray-500 truncate">
+                              資料管理
+                            </dt>
+                            <dd>
+                              <div className="text-lg font-medium text-gray-900">
+                                管理國家與方案
+                              </div>
+                            </dd>
+                          </dl>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="bg-gray-50 px-4 py-4 sm:px-6">
+                      <div className="text-sm">
+                        <div className="font-medium text-blue-600 hover:text-blue-500">
+                          查看詳情
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+
+                  <Link href="/admin/data/import" className="bg-white overflow-hidden shadow rounded-lg">
+                    <div className="px-4 py-5 sm:p-6">
+                      <div className="flex items-center">
+                        <div className="flex-shrink-0 bg-green-500 rounded-md p-3">
+                          <svg className="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
+                          </svg>
+                        </div>
+                        <div className="ml-5 w-0 flex-1">
+                          <dl>
+                            <dt className="text-sm font-medium text-gray-500 truncate">
+                              資料匯入
+                            </dt>
+                            <dd>
+                              <div className="text-lg font-medium text-gray-900">
+                                批量匯入與客製方案
+                              </div>
+                            </dd>
+                          </dl>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="bg-gray-50 px-4 py-4 sm:px-6">
+                      <div className="text-sm">
+                        <div className="font-medium text-green-600 hover:text-green-500">
+                          開始匯入
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+
+                  {/* User Management Card */}
+                  <div className="bg-white overflow-hidden shadow rounded-lg">
+                    <div className="px-4 py-5 sm:p-6">
+                      <h3 className="text-lg font-medium leading-6 text-gray-900">折扣訂單</h3>
+                      <div className="mt-2 max-w-xl text-sm text-gray-500">
+                        <p>折扣訂單輸出。</p>
+                      </div>
+                      <div className="mt-5">
+                        <Link href="/countries" className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700">
+                          折扣訂單輸出
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </div>

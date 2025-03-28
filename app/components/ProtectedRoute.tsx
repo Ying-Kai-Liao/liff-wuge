@@ -19,14 +19,23 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   // List of authorized LINE user IDs who can access admin
   const adminLineIds = useMemo(() => ['U673c35728bf8bc8da575d191956cb925'], []); // Replace with actual LINE user IDs
   
+  // Development bypass - set to true to bypass admin checks during development
+  const DEV_MODE = true;
+  
   // Check if current user is admin
   const isAdmin = useMemo(() => {
+    // Always return true in dev mode
+    if (DEV_MODE) return true;
+    
     if (!liff || !isLoggedIn) return false;
     const userId = liff.getDecodedIDToken()?.sub;
     return !!userId && adminLineIds.includes(userId);
   }, [liff, isLoggedIn, adminLineIds]);
 
   useEffect(() => {
+    // Development bypass - skip all authentication checks
+    if (DEV_MODE) return;
+    
     if (liff) {
       if (!isLoggedIn) {
         // User is not authenticated, redirect to login
@@ -36,7 +45,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
         router.push('/unauthorized');
       }
     }
-  }, [liff, isLoggedIn, adminOnly, isAdmin, router]);
+  }, [liff, isLoggedIn, isAdmin, adminOnly, router]);
 
   // Show loading state while checking authentication
   if (!liff || liffError) {
@@ -47,13 +56,21 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     );
   }
 
-  // If user is authenticated (and is admin if adminOnly is true), render children
-  if (isLoggedIn && (!adminOnly || isAdmin)) {
+  // In development mode, always render children
+  if (DEV_MODE) {
     return <>{children}</>;
   }
+  
+  // In production, only render when authenticated
+  if (!liff || !isLoggedIn) {
+    return null;
+  }
 
-  // Otherwise, render nothing while redirecting
-  return null;
+  if (adminOnly && !isAdmin) {
+    return null;
+  }
+
+  return <>{children}</>;
 };
 
 export default ProtectedRoute;

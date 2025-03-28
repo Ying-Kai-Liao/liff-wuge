@@ -199,7 +199,7 @@ export default function CountryDetailPage() {
           <h1 className="text-2xl font-bold">{country.name}</h1>
         </div>
         
-        <p className="text-gray-600 dark:text-gray-300">{country.description}</p>
+        <p className="text-gray-600">{country.description}</p>
       </div>
       
       {/* SIM Type Selection */}
@@ -271,13 +271,13 @@ export default function CountryDetailPage() {
         </h2>
         
         {filteredPlans.length === 0 ? (
-          <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg text-center">
+          <div className="bg-gray-100 p-6 rounded-lg text-center">
             <p>沒有符合條件的方案</p>
           </div>
         ) : (
           <div className="grid gap-6">
             {filteredPlans.map((plan) => (
-              <div key={plan.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+              <div key={plan.id} className="bg-white rounded-lg shadow-md overflow-hidden">
                 <div className="p-4 bg-gradient-to-r from-blue-50 to-white border-b">
                   <div className="flex items-center">
                     <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center mr-3">
@@ -293,19 +293,24 @@ export default function CountryDetailPage() {
                         <span className="text-gray-500 text-xl">📱</span>
                       )}
                     </div>
-                    <h3 className="text-xl font-semibold">{plan.carrier}</h3>
+                    <div>
+                      <h3 className="text-xl font-semibold">
+                        {plan.duration_days}天 {plan.data_per_day ? `每日${plan.data_per_day}` : plan.total_data}
+                      </h3>
+                      <div className="text-sm text-gray-600">{plan.carrier}</div>
+                    </div>
                   </div>
                 </div>
                 
                 <div className="p-4">
                   <div className="flex justify-between items-start mb-3">
                     <div>
-                      <h4 className="text-lg font-medium">{plan.title || `${plan.duration_days}天方案`}</h4>
-                      <div className="text-sm text-gray-600 dark:text-gray-300">
-                        {plan.data_per_day ? `每日 ${plan.data_per_day}` : plan.total_data}
+                      <h4 className="text-lg font-medium">{plan.title || `${plan.speed_policy}方案`}</h4>
+                      <div className="text-sm text-gray-600">
+                        {plan.speed_policy}
                       </div>
-                      <div className="text-sm text-gray-600 dark:text-gray-300">
-                        {plan.duration_days} 天 · {plan.speed_policy}
+                      <div className="text-sm text-gray-600">
+                        {plan.sharing_supported ? '支援熱點分享' : '不支援熱點分享'}
                       </div>
                     </div>
                     <div className="text-xl font-bold">
@@ -313,11 +318,7 @@ export default function CountryDetailPage() {
                     </div>
                   </div>
                   
-                  <div className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-                    <div className="flex items-center mb-1">
-                      <span className="mr-2">✓</span>
-                      <span>{plan.sharing_supported ? '支援熱點分享' : '不支援熱點分享'}</span>
-                    </div>
+                  <div className="text-sm text-gray-600 mb-4">
                     {plan.device_limit && (
                       <div className="flex items-center mb-1">
                         <span className="mr-2">✓</span>
@@ -341,16 +342,16 @@ export default function CountryDetailPage() {
                       <div className="flex items-center">
                         <button
                           onClick={() => handleUpdateQuantity(plan, getPlanQuantity(plan.id) - 1)}
-                          className="w-8 h-8 flex items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-l-lg"
+                          className="w-8 h-8 flex items-center justify-center bg-gray-200 rounded-l-lg"
                         >
                           -
                         </button>
-                        <div className="w-10 h-8 flex items-center justify-center bg-gray-100 dark:bg-gray-600">
+                        <div className="w-10 h-8 flex items-center justify-center bg-gray-100">
                           {getPlanQuantity(plan.id)}
                         </div>
                         <button
                           onClick={() => handleUpdateQuantity(plan, getPlanQuantity(plan.id) + 1)}
-                          className="w-8 h-8 flex items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-r-lg"
+                          className="w-8 h-8 flex items-center justify-center bg-gray-200 rounded-r-lg"
                         >
                           +
                         </button>
