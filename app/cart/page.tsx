@@ -597,7 +597,7 @@ export default function CartPage() {
           </button>
         </div>
         
-        <div className="mb-4 text-center text-sm text-gray-500">
+        {/* <div className="mb-4 text-center text-sm text-gray-500">
           <button 
             onClick={fillTestData}
             className="text-sm text-blue-500 hover:text-blue-700 mr-4"
@@ -611,7 +611,7 @@ export default function CartPage() {
           >
             直接發送模板測試
           </button>
-        </div>
+        </div> */}
         
         {!liff?.isInClient() && (
           <div className="mt-4 text-center text-sm text-gray-500">
