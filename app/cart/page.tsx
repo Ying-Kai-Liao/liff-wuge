@@ -39,7 +39,7 @@ export default function CartPage() {
   const [error, setError] = useState<string | null>(null);
   const [isSending, setIsSending] = useState(false);
   const [sendSuccess, setSendSuccess] = useState(false);
-  const [currentStep, setCurrentStep] = useState<'cart' | 'details'>('cart');
+  const [currentStep, setCurrentStep] = useState<'cart' | 'details' | 'success'>('cart');
   const [messageType, setMessageType] = useState<'flex' | 'text'>('flex');
   
   // Admin discount
@@ -301,10 +301,10 @@ export default function CartPage() {
       }
       
       if (success) {
-        setSendSuccess(true);
-        setTimeout(() => {
-          setSendSuccess(false);
-        }, 3000);
+        // Clear the cart after successful send
+        // await clearCart();
+        // Show success screen
+        setCurrentStep('success');
       } else {
         setError('傳送失敗，請稍後再試');
       }
@@ -694,23 +694,67 @@ export default function CartPage() {
     );
   };
 
+  const renderSuccessScreen = () => {
+    return (
+      <div className="flex flex-col items-center justify-center py-12">
+        <div className="bg-green-50 border border-green-200 rounded-full p-6 mb-6">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-20 w-20 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        
+        <h2 className="text-2xl font-bold text-[#006A71] mb-4 text-center">訂單已成功發送！</h2>
+        <p className="text-gray-600 text-center mb-8 max-w-md">
+          您的訂單已成功發送到您的 LINE 聊天室。請返回 LINE 查看訂單詳情並完成確認。
+        </p>
+        
+        <div className="flex flex-col space-y-4 w-full max-w-xs">
+          {liff?.isInClient() && (
+            <button
+              onClick={() => {
+                if (liff) {
+                  liff.closeWindow();
+                }
+              }}
+              className="px-6 py-3 bg-[#006A71] text-white rounded-lg hover:bg-[#004a4f] transition-colors flex items-center justify-center"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+              關閉視窗並返回 LINE
+            </button>
+          )}
+          
+          <Link
+            href="/"
+            className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors text-center"
+          >
+            返回首頁
+          </Link>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <TravelLayout title="購物車">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-[#006A71] mb-2">購物車</h1>
-        <p className="text-gray-600">查看您選擇的 eSIM 方案並完成訂單</p>
+        <p className="text-gray-600">查看您選擇的 SIM 卡方案並完成訂單</p>
       </div>
       
-      {sendSuccess && (
-        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-4 flex items-center">
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-4 flex items-center">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
           </svg>
-          <p>訂單已成功發送到您的 LINE 聊天室！</p>
+          <p>{error}</p>
         </div>
       )}
       
-      {currentStep === 'cart' ? renderCartContent() : renderUserDetailsForm()}
+      {currentStep === 'cart' && renderCartContent()}
+      {currentStep === 'details' && renderUserDetailsForm()}
+      {currentStep === 'success' && renderSuccessScreen()}
     </TravelLayout>
   );
 }
