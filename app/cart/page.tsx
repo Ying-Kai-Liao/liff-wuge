@@ -31,6 +31,7 @@ export default function CartPage() {
   const [isSending, setIsSending] = useState(false);
   const [sendSuccess, setSendSuccess] = useState(false);
   const [currentStep, setCurrentStep] = useState<'cart' | 'details'>('cart');
+  const [messageType, setMessageType] = useState<'flex' | 'text'>('flex');
   
   // User details form
   const [userDetails, setUserDetails] = useState<UserDetails>({
@@ -128,12 +129,99 @@ export default function CartPage() {
     }));
   };
 
+  const fillTestData = () => {
+    setUserDetails({
+      name: '測試用戶',
+      email: 'test@example.com',
+      phone: '0912345678',
+      address: '台北市信義區信義路五段7號',
+      note: '這是測試訂單，請勿處理'
+    });
+  };
+
   const handleProceedToDetails = () => {
     setCurrentStep('details');
   };
 
   const handleBackToCart = () => {
     setCurrentStep('cart');
+  };
+
+  // Send cart as text message (old method)
+  const sendCartAsText = async () => {
+    if (!liff) {
+      setError('LIFF not initialized');
+      return false;
+    }
+    
+    if (!liff.isInClient()) {
+      setError('此功能僅在 LINE App 內可用');
+      return false;
+    }
+
+    try {
+      // Format the message with cart items and user details
+      const cartItems = detailedCart.map(item => {
+        if (!item.plan) return null;
+        
+        return {
+          plan: item.plan,
+          quantity: item.quantity
+        };
+      }).filter(Boolean);
+      
+      let message = "📱 eSIM 訂單：\n\n";
+      
+      // Add cart items
+      cartItems.forEach((item, index) => {
+        if (item && item.plan) {
+          message += `${index + 1}. ${item.plan.country} - ${item.plan.carrier}\n`;
+          message += `   ${item.plan.duration_days}天 / ${item.plan.plan_type === 'daily' ? `每日${item.plan.data_per_day}` : `總共${item.plan.total_data}`}\n`;
+          message += `   ${item.plan.price}${item.plan.currency || 'TWD'} x ${item.quantity} = ${item.plan.price * item.quantity}${item.plan.currency || 'TWD'}\n`;
+          message += `   類型: ${item.plan.sim_type === 'esim' ? 'eSIM' : '實體 SIM'}\n\n`;
+        }
+      });
+      
+      // Calculate total
+      const total = cartItems.reduce((sum, item) => {
+        if (item && item.plan) {
+          return sum + (item.plan.price * item.quantity);
+        }
+        return sum;
+      }, 0);
+      
+      message += `總計: ${total} TWD\n\n`;
+      
+      // Add user details
+      message += "客戶資料:\n";
+      message += `姓名: ${userDetails.name}\n`;
+      message += `電話: ${userDetails.phone}\n`;
+      message += `Email: ${userDetails.email}\n`;
+      
+      if (hasPhysical && userDetails.address) {
+        message += `地址: ${userDetails.address}\n`;
+      }
+      
+      if (userDetails.note) {
+        message += `\n備註: ${userDetails.note}\n`;
+      }
+      
+      // Send message back to LINE chat
+      await liff.sendMessages([
+        {
+          type: 'text',
+          text: message
+        }
+      ]);
+      
+      // Clear the cart after sending
+      await clearCart();
+      
+      return true;
+    } catch (err) {
+      console.error('Error sending order to chat:', err);
+      return false;
+    }
   };
 
   const handleSubmitOrder = async () => {
@@ -150,8 +238,16 @@ export default function CartPage() {
     try {
       setIsSending(true);
       
-      // Use the enhanced sendCartToChat function that utilizes the Flex Message template
-      const success = await sendCartToChat();
+      let success = false;
+      
+      // Use the selected message type
+      if (messageType === 'flex') {
+        // Use the enhanced sendCartToChat function that utilizes the Flex Message template
+        success = await sendCartToChat();
+      } else {
+        // Use the text message format
+        success = await sendCartAsText();
+      }
       
       if (success) {
         setSendSuccess(true);
@@ -433,6 +529,32 @@ export default function CartPage() {
           </div>
         </div>
         
+        <div className="mb-6">
+          <h3 className="text-lg font-medium mb-2">訊息格式</h3>
+          <div className="flex space-x-4">
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name="messageType"
+                checked={messageType === 'flex'}
+                onChange={() => setMessageType('flex')}
+                className="mr-2"
+              />
+              <span>精美卡片格式</span>
+            </label>
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name="messageType"
+                checked={messageType === 'text'}
+                onChange={() => setMessageType('text')}
+                className="mr-2"
+              />
+              <span>純文字格式</span>
+            </label>
+          </div>
+        </div>
+        
         <div className="flex flex-col sm:flex-row gap-3 justify-between">
           <button
             onClick={handleBackToCart}
@@ -465,6 +587,15 @@ export default function CartPage() {
                 <span className="mr-2">💬</span> 傳送訂單至 LINE
               </>
             )}
+          </button>
+        </div>
+        
+        <div className="mb-4 text-center text-sm text-gray-500">
+          <button 
+            onClick={fillTestData}
+            className="text-sm text-blue-500 hover:text-blue-700"
+          >
+            填入測試資料
           </button>
         </div>
         

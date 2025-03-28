@@ -261,13 +261,18 @@ function useCartHook(): CartContextType {
       }
       
       // Send flex message to LINE chat
-      await liff.sendMessages([
-        {
-          type: 'flex',
-          altText: '您的eSIM訂單明細',
-          contents: flexMessage
-        }
-      ]);
+      try {
+        await liff.sendMessages([
+          {
+            type: 'flex',
+            altText: '您的eSIM訂單明細',
+            contents: flexMessage
+          }
+        ]);
+      } catch (error) {
+        console.error('Error sending flex message:', error);
+        throw new Error('Failed to send message to LINE chat');
+      }
 
       // Clear the cart after sending
       await clearCart();
