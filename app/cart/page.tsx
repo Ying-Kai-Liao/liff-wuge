@@ -24,7 +24,14 @@ type UserDetails = {
 
 export default function CartPage() {
   const { liff } = useLiff();
-  const { cart, removePlanFromCart, clearCart, updatePlanQuantity, sendCartToChat } = useCart();
+  const { 
+    cart, 
+    removePlanFromCart, 
+    clearCart, 
+    updatePlanQuantity, 
+    sendCartToChat, 
+    sendTemplateDirectly 
+  } = useCart();
   const [detailedCart, setDetailedCart] = useState<DetailedCartItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -593,9 +600,16 @@ export default function CartPage() {
         <div className="mb-4 text-center text-sm text-gray-500">
           <button 
             onClick={fillTestData}
-            className="text-sm text-blue-500 hover:text-blue-700"
+            className="text-sm text-blue-500 hover:text-blue-700 mr-4"
           >
             填入測試資料
+          </button>
+          
+          <button 
+            onClick={handleSendTemplateDirectly}
+            className="text-sm text-green-500 hover:text-green-700"
+          >
+            直接發送模板測試
           </button>
         </div>
         
@@ -606,6 +620,27 @@ export default function CartPage() {
         )}
       </>
     );
+  };
+
+  const handleSendTemplateDirectly = async () => {
+    try {
+      setIsSending(true);
+      const success = await sendTemplateDirectly();
+      
+      if (success) {
+        setSendSuccess(true);
+        setTimeout(() => {
+          setSendSuccess(false);
+        }, 3000);
+      } else {
+        setError('傳送模板失敗，請稍後再試');
+      }
+    } catch (err) {
+      console.error('Error sending template to chat:', err);
+      setError('傳送模板失敗，請稍後再試');
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (

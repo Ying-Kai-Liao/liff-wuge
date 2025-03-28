@@ -22,6 +22,7 @@ type CartContextType = {
   clearCart: () => Promise<void>;
   updatePlanQuantity: (planId: string, quantity: number) => Promise<void>;
   sendCartToChat: () => Promise<boolean>;
+  sendTemplateDirectly: () => Promise<boolean>;
 };
 
 // Create context with default values
@@ -33,7 +34,8 @@ const CartContext = createContext<CartContextType>({
   removePlanFromCart: async () => {},
   clearCart: async () => {},
   updatePlanQuantity: async () => {},
-  sendCartToChat: async () => false
+  sendCartToChat: async () => false,
+  sendTemplateDirectly: async () => false
 });
 
 // Implementation of the cart hook
@@ -285,6 +287,34 @@ function useCartHook(): CartContextType {
     }
   };
 
+  // Send the template directly without modifications
+  const sendTemplateDirectly = async () => {
+    if (!liff || !liff.isInClient || !liff.isInClient()) {
+      setError('Cannot send template. Please make sure you are using LINE app.');
+      return false;
+    }
+
+    try {
+      // Import the Flex Message template
+      const orderTemplate = require('../cart/liff-template-order.json');
+      
+      // Send the template as is without any modifications
+      await liff.sendMessages([
+        {
+          type: 'flex',
+          altText: '測試eSIM訂單模板',
+          contents: orderTemplate
+        }
+      ]);
+      
+      return true;
+    } catch (err) {
+      console.error('Error sending template to chat:', err);
+      setError('Failed to send template to chat');
+      return false;
+    }
+  };
+
   return {
     cart,
     isLoading,
@@ -293,7 +323,8 @@ function useCartHook(): CartContextType {
     removePlanFromCart,
     clearCart,
     updatePlanQuantity,
-    sendCartToChat
+    sendCartToChat,
+    sendTemplateDirectly
   };
 }
 
