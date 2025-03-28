@@ -325,9 +325,9 @@ function useCartHook(): CartContextType {
               "aspectRatio": "20:13",
               "aspectMode": "cover",
               "action": {
-                "type": "uri",
+                "type": "location",
                 "label": "View",
-                "uri": "https://liff-wuge.vercel.app"
+                // "uri": "https://liff-wuge.vercel.app"
               }
             },
             "body": {
