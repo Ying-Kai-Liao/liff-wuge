@@ -3,7 +3,7 @@
 import React, { ReactNode } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useInquiry } from '../hooks/useInquiry';
+import { useCart } from '../hooks/useCart';
 
 interface TravelLayoutProps {
   children: ReactNode;
@@ -16,19 +16,19 @@ export default function TravelLayout({
   children, 
   title, 
   showBackButton = false,
-  backUrl = '/countries'
+  backUrl = '/'
 }: TravelLayoutProps) {
   const pathname = usePathname();
-  const { inquiryList } = useInquiry();
+  const { cart } = useCart();
   
-  // Determine if we're on the countries page to show a special header
-  const isCountriesPage = pathname === '/countries';
-  const isInquiryPage = pathname === '/inquiry';
+  // Determine if we're on the home page to show a special header
+  const isHomePage = pathname === '/';
+  const isCartPage = pathname === '/cart';
   
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      {/* Hero header for countries page */}
-      {isCountriesPage && (
+      {/* Hero header for home page */}
+      {isHomePage && (
         <div className="relative bg-cover bg-center h-64 mb-6" 
              style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1488085061387-422e29b40080?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1200&q=80")' }}>
           <div className="absolute inset-0 bg-blue-900/60"></div>
@@ -42,7 +42,7 @@ export default function TravelLayout({
       )}
       
       {/* Regular header for other pages */}
-      {!isCountriesPage && (
+      {!isHomePage && (
         <header className="bg-white shadow-sm py-4 px-4 mb-6">
           <div className="container mx-auto max-w-5xl flex justify-between items-center">
             <div className="flex items-center">
@@ -54,13 +54,13 @@ export default function TravelLayout({
               {title && <h1 className="text-xl font-bold">{title}</h1>}
             </div>
             
-            {!isInquiryPage && inquiryList.length > 0 && (
+            {!isCartPage && (
               <Link 
-                href="/inquiry"
+                href="/cart"
                 className="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg transition-colors"
               >
-                <span className="mr-2">📋</span>
-                <span>詢問清單 ({inquiryList.length})</span>
+                <span className="mr-2">🛒</span>
+                <span>購物車 ({cart.length})</span>
               </Link>
             )}
           </div>
@@ -79,16 +79,16 @@ export default function TravelLayout({
               <p className="text-gray-300">為您的旅行提供最佳連線體驗</p>
             </div>
             <div className="flex space-x-6">
-              <Link href="/countries" className="text-gray-300 hover:text-white">
+              <Link href="/" className="text-gray-300 hover:text-white">
                 國家目錄
               </Link>
-              <Link href="/inquiry" className="text-gray-300 hover:text-white">
-                詢問清單
+              <Link href="/cart" className="text-gray-300 hover:text-white">
+                購物車
               </Link>
             </div>
           </div>
           <div className="mt-6 pt-6 border-t border-gray-700 text-center text-gray-400 text-sm">
-            © {new Date().getFullYear()} 環球 eSIM 服務. 版權所有.
+            &copy; {new Date().getFullYear()} 環球 eSIM 服務. 版權所有.
           </div>
         </div>
       </footer>

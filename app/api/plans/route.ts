@@ -1,19 +1,25 @@
 import { NextResponse } from 'next/server';
-import { getPlansByCarrier } from '../../lib/services/planService';
+import { getPlansByCarrier, getPlansByCountry, getAllPlans } from '../../lib/services/planService';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const carrierId = searchParams.get('carrierId');
-  
-  if (!carrierId) {
-    return NextResponse.json(
-      { error: 'Carrier ID is required' },
-      { status: 400 }
-    );
-  }
+  const country = searchParams.get('country');
   
   try {
-    const plans = await getPlansByCarrier(carrierId);
+    let plans;
+    
+    if (carrierId) {
+      // Get plans by carrier ID
+      plans = await getPlansByCarrier(carrierId);
+    } else if (country) {
+      // Get plans by country
+      plans = await getPlansByCountry(country);
+    } else {
+      // Get all plans if no filter is provided
+      plans = await getAllPlans();
+    }
+    
     return NextResponse.json(plans);
   } catch (error) {
     console.error('Error fetching plans:', error);

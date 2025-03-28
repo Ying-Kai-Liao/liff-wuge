@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { clearInquiry } from '../../../../../lib/services/userService';
+import { clearCart } from '../../../../../lib/services/userService';
 
-// Clear all items from inquiry list
+// Clear all items from cart
 export async function POST(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -9,13 +9,13 @@ export async function POST(
   try {
     const userId = (await params).id;
     
-    await clearInquiry(userId);
+    await clearCart(userId);
     
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error clearing inquiry:', error);
+    console.error('Error clearing cart:', error);
     return NextResponse.json(
-      { error: 'Failed to clear inquiry list' },
+      { error: 'Failed to clear cart' },
       { status: 500 }
     );
   }

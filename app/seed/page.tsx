@@ -80,14 +80,36 @@ export default function SeedPage() {
             <div className="mt-4">
               <Link 
                 href="/countries"
-                className="inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+                className="inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors mr-2"
               >
                 瀏覽國家目錄
+              </Link>
+              
+              <Link 
+                href="/seed-japan-plans"
+                className="inline-block px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600 transition-colors"
+              >
+                添加日本KDDI方案
               </Link>
             </div>
           )}
         </div>
       )}
+      
+      <div className="mt-8 border-t pt-6">
+        <h2 className="text-xl font-semibold mb-4">其他種子資料選項</h2>
+        <div className="grid gap-4">
+          <Link 
+            href="/seed-japan-plans"
+            className="block p-4 bg-white dark:bg-gray-800 border rounded-lg hover:shadow-md transition-shadow"
+          >
+            <h3 className="font-medium text-lg">日本KDDI方案</h3>
+            <p className="text-gray-600 dark:text-gray-300 text-sm mt-1">
+              添加日本KDDI電信的eSIM和實體SIM卡方案，包含3天、4天和5天的每日500MB選項。
+            </p>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }

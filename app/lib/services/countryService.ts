@@ -2,6 +2,7 @@ import { Country } from '../../types';
 import { 
   getCollection, 
   getDocument, 
+  getDocumentsByField,
   addDocument, 
   updateDocument, 
   deleteDocument 
@@ -17,6 +18,12 @@ export async function getAllCountries(): Promise<Country[]> {
 // Get a country by ID
 export async function getCountryById(id: string): Promise<Country | null> {
   return getDocument<Country>(COLLECTION_NAME, id);
+}
+
+// Get a country by code
+export async function getCountryByCode(code: string): Promise<Country | null> {
+  const countries = await getDocumentsByField<Country>(COLLECTION_NAME, 'code', code);
+  return countries.length > 0 ? countries[0] : null;
 }
 
 // Add a new country

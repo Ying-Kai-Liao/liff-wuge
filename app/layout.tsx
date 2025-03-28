@@ -1,43 +1,37 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import LiffProvider from "./components/LiffProvider";
-import Navigation from "./components/Navigation";
-import { InquiryProvider } from "./hooks/useInquiry";
+import './globals.css';
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import LiffProvider from './components/LiffProvider';
+import Navigation from './components/Navigation';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+import { CartProvider } from './hooks/useCart';
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
 });
 
 export const metadata: Metadata = {
-  title: "eSIM 目錄 - LINE Bot",
-  description: "eSIM 國家與電信方案查詢服務",
+  title: "環球 eSIM 服務",
+  description: "為您的旅行提供最佳連線體驗",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="zh-TW">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${inter.variable} font-sans antialiased`}>
         <LiffProvider>
-          <InquiryProvider>
+          <CartProvider>
             <Navigation />
             <main className="min-h-screen bg-gray-50 dark:bg-gray-950">
               {children}
             </main>
-            </InquiryProvider>
-          </LiffProvider>
+          </CartProvider>
+        </LiffProvider>
       </body>
     </html>
   );

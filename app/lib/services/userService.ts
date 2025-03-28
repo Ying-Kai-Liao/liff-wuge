@@ -1,4 +1,4 @@
-import { UserProfile, InquiryItem } from '../../types';
+import { UserProfile, CartItem } from '../../types';
 import { 
   getDocument, 
   updateDocument 
@@ -24,51 +24,77 @@ export async function saveUserProfile(userId: string, profile: Partial<UserProfi
     // Update existing user
     await updateDocument<UserProfile>(COLLECTION_NAME, userId, profile);
   } else {
-    // Create new user with empty inquiry list
+    // Create new user with empty cart
     await setDoc(userRef, {
       userId,
-      inquiryList: [],
+      cart: [],
       ...profile
     });
   }
 }
 
-// Add item to inquiry list
-export async function addToInquiry(
+// Add item to cart
+export async function addToCart(
   userId: string, 
-  item: Omit<InquiryItem, 'addedAt'>
+  item: Omit<CartItem, 'addedAt'>
 ): Promise<void> {
   const user = await getUserProfile(userId);
   
   if (user) {
-    const inquiryList = [...user.inquiryList];
+    const cart = [...user.cart];
     
     // Check if item already exists
-    const existingIndex = inquiryList.findIndex(i => i.planId === item.planId);
+    const existingIndex = cart.findIndex(i => i.planId === item.planId);
     
     if (existingIndex === -1) {
       // Add new item with timestamp
-      inquiryList.push({
+      cart.push({
         ...item,
-        addedAt: Date.now()
+        addedAt: new Date()
       });
       
-      await updateDocument<UserProfile>(COLLECTION_NAME, userId, { inquiryList });
+      await updateDocument<UserProfile>(COLLECTION_NAME, userId, { cart });
     }
   }
 }
 
-// Remove item from inquiry list
-export async function removeFromInquiry(userId: string, planId: string): Promise<void> {
+// Update quantity of an item in the cart
+export async function updateCartQuantity(
+  userId: string, 
+  planId: string, 
+  quantity: number
+): Promise<void> {
   const user = await getUserProfile(userId);
   
   if (user) {
-    const inquiryList = user.inquiryList.filter(item => item.planId !== planId);
-    await updateDocument<UserProfile>(COLLECTION_NAME, userId, { inquiryList });
+    const cart = [...user.cart];
+    
+    // Find the item
+    const existingIndex = cart.findIndex(i => i.planId === planId);
+    
+    if (existingIndex !== -1) {
+      // Update quantity
+      cart[existingIndex] = {
+        ...cart[existingIndex],
+        quantity
+      };
+      
+      await updateDocument<UserProfile>(COLLECTION_NAME, userId, { cart });
+    }
   }
 }
 
-// Clear inquiry list
-export async function clearInquiry(userId: string): Promise<void> {
-  await updateDocument<UserProfile>(COLLECTION_NAME, userId, { inquiryList: [] });
+// Remove item from cart
+export async function removeFromCart(userId: string, planId: string): Promise<void> {
+  const user = await getUserProfile(userId);
+  
+  if (user) {
+    const cart = user.cart.filter(item => item.planId !== planId);
+    await updateDocument<UserProfile>(COLLECTION_NAME, userId, { cart });
+  }
+}
+
+// Clear cart
+export async function clearCart(userId: string): Promise<void> {
+  await updateDocument<UserProfile>(COLLECTION_NAME, userId, { cart: [] });
 }
