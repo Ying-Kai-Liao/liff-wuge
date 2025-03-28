@@ -1,16 +1,22 @@
-'use client';
+"use client";
 
-import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
-import { CartItem } from '../types';
-import { useLiff } from '../components/LiffProvider';
-import { 
-  getUserProfile, 
-  addToCart, 
-  removeFromCart, 
-  clearCart as clearUserCart, 
-  updateCartQuantity
-} from '../lib/services/userService';
-import { getPlanById } from '../lib/services/planService';
+import {
+  useState,
+  useEffect,
+  createContext,
+  useContext,
+  ReactNode,
+} from "react";
+import { CartItem } from "../types";
+import { useLiff } from "../components/LiffProvider";
+import {
+  getUserProfile,
+  addToCart,
+  removeFromCart,
+  clearCart as clearUserCart,
+  updateCartQuantity,
+} from "../lib/services/userService";
+import { getPlanById } from "../lib/services/planService";
 
 // Create context type
 type CartContextType = {
@@ -35,7 +41,7 @@ const CartContext = createContext<CartContextType>({
   clearCart: async () => {},
   updatePlanQuantity: async () => {},
   sendCartToChat: async () => false,
-  sendTemplateDirectly: async () => false
+  sendTemplateDirectly: async () => false,
 });
 
 // Implementation of the cart hook
@@ -45,6 +51,7 @@ function useCartHook(): CartContextType {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
+  const [userProfile, setUserProfile] = useState<any>(null);
 
   // Load user profile and cart when LIFF is initialized
   useEffect(() => {
@@ -54,15 +61,16 @@ function useCartHook(): CartContextType {
           setIsLoading(true);
           const profile = await liff.getProfile();
           setUserId(profile.userId);
-          
-          const userProfile = await getUserProfile(profile.userId);
-          if (userProfile) {
-            setCart(userProfile.cart || []);
+
+          const userProfileData = await getUserProfile(profile.userId);
+          setUserProfile(userProfileData);
+          if (userProfileData) {
+            setCart(userProfileData.cart || []);
           }
           setError(null);
         } catch (err) {
-          console.error('Error loading user data:', err);
-          setError('Failed to load your cart');
+          console.error("Error loading user data:", err);
+          setError("Failed to load your cart");
         } finally {
           setIsLoading(false);
         }
@@ -77,25 +85,25 @@ function useCartHook(): CartContextType {
   // Add a plan to the cart
   const addPlanToCart = async (planId: string, quantity: number) => {
     if (!userId) {
-      setError('Please log in to add items to your cart');
+      setError("Please log in to add items to your cart");
       return;
     }
 
     try {
-      const newItem: Omit<CartItem, 'addedAt'> = {
+      const newItem: Omit<CartItem, "addedAt"> = {
         planId,
-        quantity
+        quantity,
       };
 
       // Optimistically update UI
       const tempItem: CartItem = {
         ...newItem,
-        addedAt: new Date()
+        addedAt: new Date(),
       };
-      
-      setCart(prev => {
+
+      setCart((prev) => {
         // Check if item already exists
-        if (prev.some(item => item.planId === planId)) {
+        if (prev.some((item) => item.planId === planId)) {
           return prev;
         }
         return [...prev, tempItem];
@@ -104,11 +112,11 @@ function useCartHook(): CartContextType {
       // Update in database
       await addToCart(userId, newItem);
     } catch (err) {
-      console.error('Error adding to cart:', err);
-      setError('Failed to add item to cart');
-      
+      console.error("Error adding to cart:", err);
+      setError("Failed to add item to cart");
+
       // Revert optimistic update on error
-      setCart(prev => prev.filter(item => item.planId !== planId));
+      setCart((prev) => prev.filter((item) => item.planId !== planId));
     }
   };
 
@@ -118,14 +126,14 @@ function useCartHook(): CartContextType {
 
     try {
       // Optimistically update UI
-      setCart(prev => prev.filter(item => item.planId !== planId));
+      setCart((prev) => prev.filter((item) => item.planId !== planId));
 
       // Update in database
       await removeFromCart(userId, planId);
     } catch (err) {
-      console.error('Error removing from cart:', err);
-      setError('Failed to remove item from cart');
-      
+      console.error("Error removing from cart:", err);
+      setError("Failed to remove item from cart");
+
       // Revert optimistic update on error
       const oldCart = [...cart];
       setCart(oldCart);
@@ -138,8 +146,8 @@ function useCartHook(): CartContextType {
 
     try {
       // Optimistically update UI
-      setCart(prev =>
-        prev.map(item =>
+      setCart((prev) =>
+        prev.map((item) =>
           item.planId === planId ? { ...item, quantity } : item
         )
       );
@@ -147,9 +155,9 @@ function useCartHook(): CartContextType {
       // Update in database
       await updateCartQuantity(userId, planId, quantity);
     } catch (err) {
-      console.error('Error updating quantity:', err);
-      setError('Failed to update quantity');
-      
+      console.error("Error updating quantity:", err);
+      setError("Failed to update quantity");
+
       // Revert optimistic update on error
       const oldCart = [...cart];
       setCart(oldCart);
@@ -167,9 +175,9 @@ function useCartHook(): CartContextType {
       // Update in database
       await clearUserCart(userId);
     } catch (err) {
-      console.error('Error clearing cart:', err);
-      setError('Failed to clear cart');
-      
+      console.error("Error clearing cart:", err);
+      setError("Failed to clear cart");
+
       // Revert optimistic update on error
       const oldCart = [...cart];
       setCart(oldCart);
@@ -179,7 +187,9 @@ function useCartHook(): CartContextType {
   // Send the cart to LINE chat
   const sendCartToChat = async () => {
     if (!liff || !liff.isInClient || !liff.isInClient() || cart.length === 0) {
-      setError('Cannot send cart. Please make sure you have items in your list and are using LINE app.');
+      setError(
+        "Cannot send cart. Please make sure you have items in your list and are using LINE app."
+      );
       return false;
     }
 
@@ -188,7 +198,7 @@ function useCartHook(): CartContextType {
       const detailedItems = await Promise.all(
         cart.map(async (item) => {
           const plan = await getPlanById(item.planId);
-          
+
           return { plan, quantity: item.quantity };
         })
       );
@@ -196,26 +206,29 @@ function useCartHook(): CartContextType {
       // Calculate total price
       const totalPrice = detailedItems.reduce((sum, item) => {
         if (item.plan) {
-          return sum + (item.plan.price * item.quantity);
+          return sum + item.plan.price * item.quantity;
         }
         return sum;
       }, 0);
 
       // Import the Flex Message template
-      const orderTemplate = require('../cart/liff-template-order.json');
-      
+      const orderTemplate = require("../cart/liff-template-order.json");
+
       // Create a deep copy of the template to avoid modifying the original
       const flexMessage = JSON.parse(JSON.stringify(orderTemplate));
-      
+
       // Update the items in the template
       const itemsContainer = flexMessage.body.contents.find(
-        (content: any) => content.type === "box" && content.layout === "vertical" && content.margin === "md"
+        (content: any) =>
+          content.type === "box" &&
+          content.layout === "vertical" &&
+          content.margin === "md"
       );
-      
+
       if (itemsContainer && itemsContainer.contents) {
         // Clear the sample items
         itemsContainer.contents = [];
-        
+
         // Add each plan as an item in the flex message
         detailedItems.forEach((item, index) => {
           if (item.plan) {
@@ -229,7 +242,7 @@ function useCartHook(): CartContextType {
                   text: `${item.plan.country} - ${item.plan.carrier} ${item.plan.duration_days}天`,
                   size: "sm",
                   color: "#333333",
-                  flex: 5
+                  flex: 5,
                 },
                 {
                   type: "text",
@@ -237,52 +250,182 @@ function useCartHook(): CartContextType {
                   size: "sm",
                   color: "#666666",
                   align: "end",
-                  flex: 1
-                }
-              ]
+                  flex: 1,
+                },
+              ],
             });
-            
+
             // Add separator if not the last item
             if (index < detailedItems.length - 1) {
               itemsContainer.contents.push({
                 type: "separator",
-                margin: "sm"
+                margin: "sm",
               });
             }
           }
         });
       }
-      
+
       // Update the total price
       const totalPriceBox = flexMessage.body.contents.find(
-        (content: any) => content.type === "box" && content.layout === "baseline" && content.margin === "md"
+        (content: any) =>
+          content.type === "box" &&
+          content.layout === "baseline" &&
+          content.margin === "md"
       );
-      
-      if (totalPriceBox && totalPriceBox.contents && totalPriceBox.contents.length > 1) {
+
+      if (
+        totalPriceBox &&
+        totalPriceBox.contents &&
+        totalPriceBox.contents.length > 1
+      ) {
         totalPriceBox.contents[1].text = `NT$${totalPrice}`;
       }
-      
+
+      // Find the shipping details container (third box in body contents)
+      const shippingDetailsContainer = flexMessage.body.contents[2].contents;
+
+      // Create a new array to hold only the shipping details that have values
+      const filteredShippingDetails = [];
+
+      // Only include address if it's provided
+      if (userProfile?.address) {
+        filteredShippingDetails.push({
+          type: "box",
+          layout: "baseline",
+          contents: [
+            {
+              type: "text",
+              text: "地址",
+              color: "#aaaaaa",
+              size: "sm",
+              flex: 1,
+            },
+            {
+              type: "text",
+              text: userProfile.address,
+              wrap: true,
+              color: "#666666",
+              size: "sm",
+              flex: 5,
+            },
+          ],
+        });
+      }
+
+      // Only include phone if it's provided
+      if (userProfile?.phone) {
+        filteredShippingDetails.push({
+          type: "box",
+          layout: "baseline",
+          margin: filteredShippingDetails.length > 0 ? "md" : undefined,
+          contents: [
+            {
+              type: "text",
+              text: "電話",
+              color: "#aaaaaa",
+              size: "sm",
+              flex: 1,
+            },
+            {
+              type: "text",
+              text: userProfile.phone,
+              wrap: true,
+              color: "#666666",
+              size: "sm",
+              flex: 5,
+            },
+          ],
+        });
+      }
+
+      // Only include email if it's provided
+      if (userProfile?.email) {
+        filteredShippingDetails.push({
+          type: "box",
+          layout: "baseline",
+          margin: filteredShippingDetails.length > 0 ? "md" : undefined,
+          contents: [
+            {
+              type: "text",
+              text: "Email",
+              color: "#aaaaaa",
+              size: "sm",
+              flex: 1,
+            },
+            {
+              type: "text",
+              text: userProfile.email,
+              wrap: true,
+              color: "#666666",
+              size: "sm",
+              flex: 5,
+            },
+          ],
+        });
+      }
+
+      // Only include note if it's provided
+      if (userProfile?.note) {
+        filteredShippingDetails.push({
+          type: "box",
+          layout: "baseline",
+          margin: filteredShippingDetails.length > 0 ? "md" : undefined,
+          contents: [
+            {
+              type: "text",
+              text: "備註",
+              color: "#aaaaaa",
+              size: "sm",
+              flex: 1,
+            },
+            {
+              type: "text",
+              text: userProfile.note,
+              wrap: true,
+              color: "#666666",
+              size: "sm",
+              flex: 5,
+            },
+          ],
+        });
+      }
+
+      // Replace the shipping details with our filtered list
+      if (shippingDetailsContainer) {
+        // If we have no shipping details, hide the entire shipping section
+        if (filteredShippingDetails.length === 0) {
+          // Remove the shipping section (both title and container)
+          flexMessage.body.contents = flexMessage.body.contents.filter(
+            (content: any, index: number) => index !== 1 && index !== 2
+          );
+        } else {
+          // Replace the shipping details with our filtered list
+          flexMessage.body.contents[2].contents = filteredShippingDetails;
+        }
+      }
+
       // Send flex message to LINE chat
       try {
         await liff.sendMessages([
           {
-            type: 'flex',
-            altText: '您的eSIM訂單明細',
-            contents: flexMessage
-          }
+            type: "flex",
+            altText: "您的eSIM訂單明細",
+            contents: flexMessage,
+          },
         ]);
       } catch (error) {
-        console.error('Error sending flex message:', error);
-        throw new Error('Failed to send message to LINE chat');
+        console.error("Error sending flex message:", error);
+        throw new Error("Failed to send message to LINE chat");
       }
 
       // Clear the cart after sending
       await clearCart();
-      
+
       return true;
     } catch (err) {
-      console.error('Error sending cart to chat:', err);
-      setError('Failed to send cart to chat');
+      console.error("Error sending cart to chat:", err);
+      setError("Failed to send cart to chat");
       return false;
     }
   };
@@ -290,187 +433,45 @@ function useCartHook(): CartContextType {
   // Send the template directly without modifications
   const sendTemplateDirectly = async () => {
     if (!liff || !liff.isInClient || !liff.isInClient()) {
-      setError('Cannot send template. Please make sure you are using LINE app.');
+      setError(
+        "Cannot send template. Please make sure you are using LINE app."
+      );
       return false;
     }
 
     try {
       // Import the Flex Message template
-      const orderTemplate = require('../cart/liff-template-order.json');
-      
+      const orderTemplate = require("../cart/liff-template-order.json");
+
       // Send the template as is without any modifications
       await liff.sendMessages([
         {
-          "type": "flex",
-          "altText": "this is a flex message",
-          "contents": {
-            "type": "bubble",
-            "header": {
-              "type": "box",
-              "layout": "vertical",
-              "contents": [
+          type: "flex",
+          altText: "this is a flex message",
+          contents: {
+            type: "bubble",
+            body: {
+              type: "box",
+              layout: "vertical",
+              contents: [
                 {
-                  "type": "text",
-                  "text": "確認訂單",
-                  "weight": "bold",
-                  "size": "xl",
-                  "align": "center"
-                }
-              ]
+                  type: "text",
+                  text: "請確認以上訂單內容後，再點選下方按鈕完成訂購。",
+                  wrap: true,
+                  color: "#666666",
+                  size: "sm",
+                  margin: "md",
+                },
+              ],
             },
-            "hero": {
-              "type": "image",
-              "url": "https://www.firstlife.com.tw/FirstOnlineInsuranceWeb/assets/img/index/HomeSec1-1.png",
-              "size": "full",
-              "aspectRatio": "20:13",
-              "aspectMode": "cover",
-              "action": {
-                "type": "uri",
-                "label": "View",
-                "uri": "https://liff-wuge.vercel.app"
-              }
-            },
-            "body": {
-              "type": "box",
-              "layout": "vertical",
-              "spacing": "sm",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "您的訂單明細",
-                  "weight": "bold",
-                  "size": "md"
-                },
-                {
-                  "type": "separator",
-                  "margin": "md"
-                },
-                {
-                  "type": "box",
-                  "layout": "vertical",
-                  "margin": "md",
-                  "spacing": "sm",
-                  "contents": [
-                    {
-                      "type": "box",
-                      "layout": "baseline",
-                      "contents": [
-                        {
-                          "type": "text",
-                          "text": "日本 KDDI+Softbank 8 天 eSIM",
-                          "size": "sm",
-                          "color": "#333333",
-                          "flex": 5
-                        },
-                        {
-                          "type": "text",
-                          "text": "x2",
-                          "size": "sm",
-                          "color": "#666666",
-                          "align": "end",
-                          "flex": 1
-                        }
-                      ]
-                    },
-                    {
-                      "type": "separator",
-                      "margin": "sm"
-                    },
-                    {
-                      "type": "box",
-                      "layout": "baseline",
-                      "contents": [
-                        {
-                          "type": "text",
-                          "text": "日本 docomo 10 天 eSIM",
-                          "size": "sm",
-                          "color": "#333333",
-                          "flex": 5
-                        },
-                        {
-                          "type": "text",
-                          "text": "x1",
-                          "size": "sm",
-                          "color": "#666666",
-                          "align": "end",
-                          "flex": 1
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "separator",
-                  "margin": "md"
-                },
-                {
-                  "type": "box",
-                  "layout": "baseline",
-                  "margin": "md",
-                  "contents": [
-                    {
-                      "type": "text",
-                      "text": "總金額",
-                      "size": "sm",
-                      "color": "#aaaaaa",
-                      "flex": 1
-                    },
-                    {
-                      "type": "text",
-                      "text": "NT$1497",
-                      "size": "sm",
-                      "color": "#333333",
-                      "align": "end",
-                      "flex": 1
-                    }
-                  ]
-                },
-                {
-                  "type": "text",
-                  "text": "請確認以上訂單內容後，再點選下方按鈕完成訂購。",
-                  "wrap": true,
-                  "color": "#666666",
-                  "size": "sm",
-                  "margin": "md"
-                }
-              ]
-            },
-            "footer": {
-              "type": "box",
-              "layout": "horizontal",
-              "spacing": "sm",
-              "contents": [
-                {
-                  "type": "button",
-                  "style": "primary",
-                  "action": {
-                    "type": "uri",
-                "label": "View",
-                "uri": "https://liff-wuge.vercel.app"
-                  },
-                  "color": "#1DB446"
-                },
-                {
-                  "type": "button",
-                  "style": "secondary",
-                  "action": {
-                    "type": "uri",
-                    "label": "View",
-                    "uri": "https://liff-wuge.vercel.app"
-                  },
-                  "color": "#999999"
-                }
-              ]
-            }
-          }
-          
-        }
+          },
+        },
       ]);
-      
+
       return true;
     } catch (err) {
-      console.error('Error sending template to chat:', err);
-      setError('Failed to send template to chat');
+      console.error("Error sending template to chat:", err);
+      setError("Failed to send template to chat");
       return false;
     }
   };
@@ -484,18 +485,16 @@ function useCartHook(): CartContextType {
     clearCart,
     updatePlanQuantity,
     sendCartToChat,
-    sendTemplateDirectly
+    sendTemplateDirectly,
   };
 }
 
 // Provider component
 export function CartProvider({ children }: { children: ReactNode }) {
   const cartHook = useCartHook();
-  
+
   return (
-    <CartContext.Provider value={cartHook}>
-      {children}
-    </CartContext.Provider>
+    <CartContext.Provider value={cartHook}>{children}</CartContext.Provider>
   );
 }
 

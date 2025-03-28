@@ -22,7 +22,7 @@
       "action": {
         "type": "uri",
         "label": "View",
-        "uri": "https://liff-wuge.vercel.app"
+        "uri": "https://example.com/order-detail"
       }
     },
     "body": {
@@ -31,18 +31,116 @@
       "spacing": "sm",
       "contents": [
         {
-          "type": "text",
-          "text": "您的訂單明細",
-          "weight": "bold",
-          "size": "md"
+          "type": "box",
+          "layout": "vertical",
+          "backgroundColor": "#E0F7FA",
+          "cornerRadius": "md",
+          "paddingAll": "md",
+          "contents": [
+            {
+              "type": "text",
+              "text": "您的訂單明細",
+              "weight": "bold",
+              "size": "md"
+            },
+            {
+              "type": "separator",
+              "margin": "md"
+            },
+            {
+              "type": "box",
+              "layout": "vertical",
+              "margin": "md",
+              "spacing": "sm",
+              "contents": [
+                {
+                  "type": "box",
+                  "layout": "baseline",
+                  "contents": [
+                    {
+                      "type": "text",
+                      "text": "日本 KDDI+Softbank 8 天 eSIM",
+                      "size": "sm",
+                      "color": "#333333",
+                      "flex": 5
+                    },
+                    {
+                      "type": "text",
+                      "text": "x2",
+                      "size": "sm",
+                      "color": "#666666",
+                      "align": "end",
+                      "flex": 1
+                    }
+                  ]
+                },
+                {
+                  "type": "separator",
+                  "margin": "sm"
+                },
+                {
+                  "type": "box",
+                  "layout": "baseline",
+                  "contents": [
+                    {
+                      "type": "text",
+                      "text": "日本 docomo 10 天 eSIM",
+                      "size": "sm",
+                      "color": "#333333",
+                      "flex": 5
+                    },
+                    {
+                      "type": "text",
+                      "text": "x1",
+                      "size": "sm",
+                      "color": "#666666",
+                      "align": "end",
+                      "flex": 1
+                    }
+                  ]
+                },
+                {
+                  "type": "separator",
+                  "margin": "md"
+                },
+                {
+                  "type": "box",
+                  "layout": "baseline",
+                  "contents": [
+                    {
+                      "type": "text",
+                      "text": "總金額",
+                      "size": "sm",
+                      "color": "#aaaaaa",
+                      "flex": 1
+                    },
+                    {
+                      "type": "text",
+                      "text": "NT$1497",
+                      "size": "sm",
+                      "color": "#333333",
+                      "align": "end",
+                      "flex": 1
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         },
         {
-          "type": "separator",
-          "margin": "md"
+          "type": "text",
+          "text": "寄送資料",
+          "weight": "bold",
+          "size": "md",
+          "margin": "lg"
         },
         {
           "type": "box",
           "layout": "vertical",
+          "backgroundColor": "#FFF9C4",
+          "cornerRadius": "md",
+          "paddingAll": "md",
           "margin": "md",
           "spacing": "sm",
           "contents": [
@@ -52,81 +150,96 @@
               "contents": [
                 {
                   "type": "text",
-                  "text": "日本 KDDI+Softbank 8 天 eSIM",
+                  "text": "地址",
+                  "color": "#aaaaaa",
                   "size": "sm",
-                  "color": "#333333",
-                  "flex": 5
+                  "flex": 1
                 },
                 {
                   "type": "text",
-                  "text": "x2",
-                  "size": "sm",
+                  "text": "台北市信義區市府路45號",
+                  "wrap": true,
                   "color": "#666666",
-                  "align": "end",
-                  "flex": 1
+                  "size": "sm",
+                  "flex": 5
                 }
               ]
-            },
-            {
-              "type": "separator",
-              "margin": "sm"
             },
             {
               "type": "box",
               "layout": "baseline",
+              "margin": "md",
               "contents": [
                 {
                   "type": "text",
-                  "text": "日本 docomo 10 天 eSIM",
+                  "text": "電話",
+                  "color": "#aaaaaa",
                   "size": "sm",
-                  "color": "#333333",
-                  "flex": 5
+                  "flex": 1
                 },
                 {
                   "type": "text",
-                  "text": "x1",
-                  "size": "sm",
+                  "text": "0912345678",
+                  "wrap": true,
                   "color": "#666666",
-                  "align": "end",
-                  "flex": 1
+                  "size": "sm",
+                  "flex": 5
                 }
               ]
-            }
-          ]
-        },
-        {
-          "type": "separator",
-          "margin": "md"
-        },
-        {
-          "type": "box",
-          "layout": "baseline",
-          "margin": "md",
-          "contents": [
-            {
-              "type": "text",
-              "text": "總金額",
-              "size": "sm",
-              "color": "#aaaaaa",
-              "flex": 1
             },
             {
-              "type": "text",
-              "text": "NT$1497",
-              "size": "sm",
-              "color": "#333333",
-              "align": "end",
-              "flex": 1
+              "type": "box",
+              "layout": "baseline",
+              "margin": "md",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "Email",
+                  "color": "#aaaaaa",
+                  "size": "sm",
+                  "flex": 1
+                },
+                {
+                  "type": "text",
+                  "text": "customer@example.com",
+                  "wrap": true,
+                  "color": "#666666",
+                  "size": "sm",
+                  "flex": 5
+                }
+              ]
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "margin": "md",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "備註",
+                  "color": "#aaaaaa",
+                  "size": "sm",
+                  "flex": 1
+                },
+                {
+                  "type": "text",
+                  "text": "請於10:00之前送達",
+                  "wrap": true,
+                  "color": "#666666",
+                  "size": "sm",
+                  "flex": 5
+                }
+              ]
             }
           ]
         },
         {
           "type": "text",
-          "text": "請確認以上訂單內容後，再點選下方按鈕完成訂購。",
+          "text": "請確認以上訂單與寄送資料後，再點選下方按鈕完成訂購。",
           "wrap": true,
           "color": "#666666",
           "size": "sm",
-          "margin": "md"
+          "margin": "lg"
         }
       ]
     },
@@ -140,8 +253,8 @@
           "style": "primary",
           "action": {
             "type": "uri",
-            "label": "View",
-            "uri": "https://liff-wuge.vercel.app"
+            "label": "確認訂單",
+            "uri": "https://example.com/order-confirm"
           },
           "color": "#1DB446"
         },
@@ -150,12 +263,11 @@
           "style": "secondary",
           "action": {
             "type": "uri",
-            "label": "View",
-            "uri": "https://liff-wuge.vercel.app"
+            "label": "取消訂單",
+            "uri": "https://example.com/order-cancel"
           },
           "color": "#999999"
         }
       ]
     }
   }
-  
