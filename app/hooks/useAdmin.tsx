@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { useLiff } from '../components/LiffProvider';
 
 // Set this to true to bypass admin checks during development
-const DEV_MODE = false;
+const DEV_MODE = true;
 
 export function useAdmin() {
   const { liff, isLoggedIn } = useLiff();

@@ -60,79 +60,53 @@ export default function AdminPage() {
           <main>
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
               <div className="px-4 py-8 sm:px-0">
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  <Link href="/admin/data" className="bg-white overflow-hidden shadow rounded-lg">
-                    <div className="px-4 py-5 sm:p-6">
-                      <div className="flex items-center">
-                        <div className="flex-shrink-0 bg-blue-500 rounded-md p-3">
-                          <svg className="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
-                          </svg>
-                        </div>
-                        <div className="ml-5 w-0 flex-1">
-                          <dl>
-                            <dt className="text-sm font-medium text-gray-500 truncate">
-                              資料管理
-                            </dt>
-                            <dd>
-                              <div className="text-lg font-medium text-gray-900">
-                                管理國家與方案
-                              </div>
-                            </dd>
-                          </dl>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="bg-gray-50 px-4 py-4 sm:px-6">
-                      <div className="text-sm">
-                        <div className="font-medium text-blue-600 hover:text-blue-500">
-                          查看詳情
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-
-                  <Link href="/admin/data/import" className="bg-white overflow-hidden shadow rounded-lg">
-                    <div className="px-4 py-5 sm:p-6">
-                      <div className="flex items-center">
-                        <div className="flex-shrink-0 bg-green-500 rounded-md p-3">
-                          <svg className="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
-                          </svg>
-                        </div>
-                        <div className="ml-5 w-0 flex-1">
-                          <dl>
-                            <dt className="text-sm font-medium text-gray-500 truncate">
-                              資料匯入
-                            </dt>
-                            <dd>
-                              <div className="text-lg font-medium text-gray-900">
-                                批量匯入與客製方案
-                              </div>
-                            </dd>
-                          </dl>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="bg-gray-50 px-4 py-4 sm:px-6">
-                      <div className="text-sm">
-                        <div className="font-medium text-green-600 hover:text-green-500">
-                          開始匯入
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-
-                  {/* User Management Card */}
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                   <div className="bg-white overflow-hidden shadow rounded-lg">
                     <div className="px-4 py-5 sm:p-6">
-                      <h3 className="text-lg font-medium leading-6 text-gray-900">折扣訂單</h3>
+                      <h3 className="text-lg leading-6 font-medium text-gray-900">國家與方案管理</h3>
                       <div className="mt-2 max-w-xl text-sm text-gray-500">
-                        <p>折扣訂單輸出。</p>
+                        <p>管理國家、SIM 卡類型與方案</p>
                       </div>
-                      <div className="mt-5">
-                        <Link href="/countries" className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700">
-                          折扣訂單輸出
+                      <div className="mt-3">
+                        <Link
+                          href="/admin/data"
+                          className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-[#006A71] hover:bg-[#004a4f]"
+                        >
+                          進入管理
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white overflow-hidden shadow rounded-lg">
+                    <div className="px-4 py-5 sm:p-6">
+                      <h3 className="text-lg leading-6 font-medium text-gray-900">目錄管理</h3>
+                      <div className="mt-2 max-w-xl text-sm text-gray-500">
+                        <p>管理 eSIM 與實體 SIM 卡的 PDF 目錄</p>
+                      </div>
+                      <div className="mt-3">
+                        <Link
+                          href="/admin/menus"
+                          className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-[#006A71] hover:bg-[#004a4f]"
+                        >
+                          進入管理
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white overflow-hidden shadow rounded-lg">
+                    <div className="px-4 py-5 sm:p-6">
+                      <h3 className="text-lg leading-6 font-medium text-gray-900">系統設定資訊</h3>
+                      <div className="mt-2 max-w-xl text-sm text-gray-500">
+                        <p>查看 LINE 帳號、LIFF 與 Firebase 設定資訊</p>
+                      </div>
+                      <div className="mt-3">
+                        <Link
+                          href="/admin/setup"
+                          className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-[#006A71] hover:bg-[#004a4f]"
+                        >
+                          查看資訊
                         </Link>
                       </div>
                     </div>

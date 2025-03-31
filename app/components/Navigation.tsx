@@ -6,6 +6,7 @@ import { useLiff } from './LiffProvider';
 import { useCart } from '../hooks/useCart';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { useAdmin } from '../hooks/useAdmin';
 
 export default function Navigation() {
   const pathname = usePathname();
@@ -13,6 +14,7 @@ export default function Navigation() {
   const { cart } = useCart();
   const [cartCount, setCartCount] = useState(0);
   const [isCartUpdated, setIsCartUpdated] = useState(false);
+  const { isAdmin } = useAdmin();
 
   // Update cart count with animation effect
   useEffect(() => {
@@ -100,6 +102,18 @@ export default function Navigation() {
                 </svg>
                 關閉
               </button>
+            )}
+
+            {isAdmin && (
+              <Link
+                href="/admin"
+                className="px-4 py-2 rounded-lg font-medium transition-colors text-[#48A6A7] hover:bg-[#F2EFE7] flex items-center"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5L7 7l11-4-5-2zm13 7l-3-3M3 13l3 3M3 13l-3-3m3-3l3 3m3-3l-3-3" />
+                </svg>
+                管理
+              </Link>
             )}
           </div>
         </div>
