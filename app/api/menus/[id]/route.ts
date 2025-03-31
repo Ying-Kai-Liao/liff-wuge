@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { doc, getDoc, updateDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/app/lib/firebase';
+import { useParams } from 'next/navigation';
 
 // GET /api/menus/[id] - Get a specific menu
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET() {
   try {
+    const params = useParams<{ id: string }>();
     const { id } = params;
     const menuRef = doc(db, 'menus', id);
     const menuSnap = await getDoc(menuRef);
