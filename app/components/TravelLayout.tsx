@@ -86,16 +86,16 @@ export default function TravelLayout({
                 className="mb-2"
               />
               <h3 className="text-xl font-bold mb-2">吳哥舖全球上網卡</h3>
-              <p className="text-[#9ACBD0]">為您的旅行提供最佳連線體驗</p>
+              <p className="text-[#9ACBD0]">為您的旅行提供最佳連線<a href="/setup">體驗</a></p>
             </div>
             <div className="flex space-x-6">
-              <a href="#" className="text-white hover:text-[#9ACBD0] transition-colors">
+              <a href="https://www.wuge.com.tw/pages/about-us" className="text-white hover:text-[#9ACBD0] transition-colors">
                 關於我們
               </a>
-              <a href="#" className="text-white hover:text-[#9ACBD0] transition-colors">
+              <a href="https://www.wuge.com.tw/pages/contact-us" className="text-white hover:text-[#9ACBD0] transition-colors">
                 聯絡我們
               </a>
-              <a href="#" className="text-white hover:text-[#9ACBD0] transition-colors">
+              <a href="https://www.wuge.com.tw/pages/esim-%E5%AE%89%E8%A3%9D%E6%AD%A5%E9%A9%9F" className="text-white hover:text-[#9ACBD0] transition-colors">
                 常見問題
               </a>
             </div>

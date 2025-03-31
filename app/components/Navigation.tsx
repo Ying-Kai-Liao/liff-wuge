@@ -88,7 +88,7 @@ export default function Navigation() {
               )}
             </Link>
             
-            {isLoggedIn && liff?.isInClient() && (
+            {/* {isLoggedIn && liff?.isInClient() && (
               <button
                 onClick={() => {
                   if (liff) {
@@ -102,7 +102,7 @@ export default function Navigation() {
                 </svg>
                 關閉
               </button>
-            )}
+            )} */}
 
             {isAdmin && (
               <Link
