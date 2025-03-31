@@ -50,24 +50,28 @@ export default function Navigation() {
           <div className="flex items-center space-x-4">
             <Link
               href="/countries"
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              className={`font-medium ${
                 pathname === '/countries' || pathname.startsWith('/country/') 
-                  ? 'bg-[#9ACBD0] text-[#006A71]' 
-                  : 'text-[#48A6A7] hover:bg-[#F2EFE7]'
+                  ? 'text-[#006A71]' 
+                  : 'text-gray-600 hover:text-[#006A71]'
               }`}
             >
               國家
             </Link>
+            <Link
+              href="/menus"
+              className={`font-medium ${
+                pathname === '/menus' ? 'text-[#006A71]' : 'text-gray-600 hover:text-[#006A71]'
+              }`}
+            >
+              舊版目錄
+            </Link>
             
             <Link
               href="/cart"
-              className={`relative px-4 py-2 rounded-lg font-medium transition-colors flex items-center ${
-                pathname === '/cart' 
-                  ? 'bg-[#9ACBD0] text-[#006A71]' 
-                  : 'text-[#48A6A7] hover:bg-[#F2EFE7]'
-              }`}
+              className="relative flex items-center"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#006A71]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
               購物車
