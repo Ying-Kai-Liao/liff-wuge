@@ -35,10 +35,10 @@ export async function GET(
 // PUT /api/menus/[id] - Update a menu
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const body = await request.json();
     
     // Validate required fields
@@ -87,10 +87,10 @@ export async function PUT(
 // DELETE /api/menus/[id] - Delete a menu
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const menuRef = doc(db, 'menus', id);
     const menuSnap = await getDoc(menuRef);
     
