@@ -227,7 +227,7 @@ export default function LiffContent() {
             </div>
           </div>
           <div className="mt-6 pt-6 border-t border-[#48A6A7] text-center text-[#9ACBD0] text-sm">
-            &copy; {new Date().getFullYear()} 吳哥舖全球上網卡. 版權所有. Developed by <a href="https://github.com/ykliao" className="underline hover:text-white transition-colors">Ying-Kai Liao</a>
+            &copy; {new Date().getFullYear()} 吳哥舖全球上網卡. 版權所有. Developed by <a href="https://github.com/Ying-Kai-Liao" className="underline hover:text-white transition-colors">Ying-Kai Liao</a>
           </div>
         </div>
       </footer>

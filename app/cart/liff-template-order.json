@@ -15,7 +15,7 @@
     },
     "hero": {
       "type": "image",
-      "url": "https://www.firstlife.com.tw/FirstOnlineInsuranceWeb/assets/img/index/HomeSec1-1.png",
+      "url": "https://liff-wuge.vercel.app/plane.jpg",
       "size": "full",
       "aspectRatio": "20:13",
       "aspectMode": "cover",
